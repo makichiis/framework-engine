@@ -1,2 +1,2 @@
 # Framework
-Voxel Game Engine written in C++. Runs on OpenGL. Will update this later.
+Voxel Game Engine written in C. Runs on OpenGL. Still in super-alpha, pls be patient..
