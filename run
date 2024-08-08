@@ -1,0 +1,85 @@
+#!/bin/sh 
+
+project_name='glprogram'
+builddir_default='./build'
+if [ -z ${builddir+x} ]; then 
+    builddir=$builddir_default 
+fi 
+# https://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash
+if [ -z ${cpu_count+x} ]; then 
+    cpu_count=$(lscpu | grep -E '^CPU\(' | tr -s ' ' | cut -d ' ' -f2 | awk '{print $1/2}')
+fi 
+# https://gist.github.com/waylan/4080362
+run_configure() {
+    # https://stackoverflow.com/questions/70880484/cmake-print-root-project-name-using-cmake-commandline
+    if [ "$1" = "release" ]; then
+        local MORE_ARGS=-DDEBUG=OFF
+    else 
+        local MORE_ARGS=-DDEBUG=ON 
+    fi 
+    command cmake -DPROJECT_NAME=$project_name . -B $builddir $MORE_ARGS $@ 
+}
+
+# always uses half of present CPUs to perform compilation. Override 
+run_build() {
+    command cmake -DPROJECT_NAME=$project_name . -B $builddir/release -DDEBUG=OFF  
+    command cmake --build build/release $@
+}
+
+run_release() {
+    run_build
+    command ./build/release/$project_name
+}
+
+run_clean() {
+    if [ ! -d "$builddir/CMakeFiles" ] && [ ! -d "$builddir/release/CMakeFiles" ]; then 
+        echo "This folder is not configured by CMake. Please verify that this folder is your actual build folder, and delete it via your directory/file removal command (usually \`rm\`)" 
+    else 
+        command rm -r $builddir
+    fi 
+}
+
+# maybe integrate this with the configure subcmd
+run_debug() {
+    command cmake -DPROJECT_NAME=$project_name -DDEBUG=ON . -B $builddir $@
+}
+
+run() {
+    if [ ! -d "$builddir/CMakeFiles" ]; then 
+        run_configure 
+    fi
+    command cmake --build $builddir -- -j $cpu_count $@ \
+        && ./$builddir/$project_name $@
+}
+
+run_with() {
+    run $@ 
+}
+
+subcmd=$1 
+case $subcmd in 
+    "-h" | "--help")
+        echo "Usage: $0 [SUBCOMMAND] [ARGS]..."
+        echo "Basic CMake bootstrapper. All rights reserved."
+        echo ""
+        echo "All subcommands listed can be passed arguments, except base \`$0\`," 
+        echo "which must be run with \`$0 with [ARGS]\` to pass args directly to your" 
+        echo "target program."
+        echo "By default, \`$0\` configures, builds, and runs your program via "
+        echo "the default arguments/values."
+        echo ""
+        echo "configure \t\t Configure target directly (default ./$builddir)"
+        echo "build     \t\t Build the target. Uses <total CPUs>/2 jobs, can"
+        echo "          \t\t be overriden by setting core_count=<# of cores>".
+        echo "with      \t\t Calls base run command, whilst passing [ARGS] "
+        echo "          \t\t to target program."
+        echo "TODO REWRITE THIS"
+        ;;
+    "")
+        run $@ 
+        ;;    
+    *)
+    shift 
+    run_${subcmd} $@
+esac 
+
