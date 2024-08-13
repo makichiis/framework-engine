@@ -1,5 +1,5 @@
-#ifndef FE_ERR_H
-#define FE_ERR_H 
+#ifndef FE_ERR_HPP
+#define FE_ERR_HPP 
 
 #define FE_ERR_BAD_ARGS 1
 #define FE_ERR_GLFW_INIT 2

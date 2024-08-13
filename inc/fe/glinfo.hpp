@@ -1,5 +1,5 @@
-#ifndef FE_GLINFO_H
-#define FE_GLINFO_H
+#ifndef FE_GLINFO_HPP 
+#define FE_GLINFO_HPP 
 
 #define FE_OPENGL_CORE_PROFILE          0x00032001
 #define FE_OPENGL_COMPAT_PROFILE        0x00032002

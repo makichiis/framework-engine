@@ -1,12 +1,12 @@
-#include "fe/err.h"
-#include <fe/logger.h> 
+#include <fe/err.hpp> 
+#include <fe/logger.hpp>  
 #include <ansi/ansi-color-codes.h>
 
-#include <stdarg.h> 
-#include <stdlib.h> 
-#include <string.h>
-#include <stdio.h> 
-#include <time.h>
+#include <cstdarg> 
+#include <cstdlib> 
+#include <cstring> 
+#include <cstdio> 
+#include <ctime> 
 
 #define LOGGING_PREFIX_INFO "[INFO]: "
 #define LOGGING_PREFIX_WARNING "[WARNING]: "
@@ -52,10 +52,10 @@ void fe_log(enum LogLevel level, FILE* out, const char* fmt, ...) {
     size_t localtime_strlen = res;
     size_t logprefix_strlen = strlen(logging_prefix);
 
-    char* log_fmt = malloc(strlen(fmt) 
+    char* log_fmt = static_cast<char*>(malloc(strlen(fmt) 
                            + logprefix_strlen 
                            + localtime_strlen 
-                           + 1);
+                           + 1));
 
     strcpy(log_fmt, localtime_buf);
     strcpy(log_fmt + localtime_strlen, logging_prefix);

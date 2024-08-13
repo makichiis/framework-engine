@@ -7,7 +7,7 @@ endif(NOT DEFINED PROJECT_NAME)
 project(
   ${PROJECT_NAME}
   VERSION 1.0
-  LANGUAGES C)
+  LANGUAGES CXX)
 
 string(TIMESTAMP TIME_OF_BUILD "UTC %Y-%m-%d @ %H:%M" UTC)
 set(VERSION_MAJOR 0)
@@ -45,7 +45,7 @@ add_compile_options(-DFE_VERSION -DFE_VERSION_TIME="${TIME_OF_BUILD}"
 
 # NOTE: CMakeLists MUST be reconfigured when new files are added. This is not a
 # bug: https://github.com/microsoft/vscode-cmake-tools/issues/722
-file(GLOB_RECURSE SOURCES "src/*.c")
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 11)

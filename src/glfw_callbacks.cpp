@@ -1,5 +1,5 @@
-#include <fe/glfw_callbacks.h>
-#include <fe/logger.h>
+#include <fe/glfw_callbacks.hpp> 
+#include <fe/logger.hpp> 
 
 void fe_base_glfw_error_callback(int blame, const char *reason) {
     FE_ERROR("GLFW error (%d) occured: %s\n", blame, reason);

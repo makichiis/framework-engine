@@ -1,5 +1,5 @@
-#ifndef FE_GLFW_CALLBACKS_H
-#define FE_GLFW_CALLBACKS_H
+#ifndef FE_GLFW_CALLBACKS_HPP 
+#define FE_GLFW_CALLBACKS_HPP 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 

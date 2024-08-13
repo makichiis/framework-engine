@@ -13,15 +13,16 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h> 
 
-#include <fe/glfw_callbacks.h>
-#include <fe/glinfo.h>
-#include <fe/logger.h>
-#include <fe/err.h>
+#include <fe/glfw_callbacks.hpp> 
+#include <fe/glinfo.hpp> 
+#include <fe/logger.hpp> 
+#include <fe/err.hpp> 
 
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdbool.h>
+#include <cstdlib> 
+#include <cstring> 
+#include <cstdbool>
+
+#include <unistd.h> 
 #include <linux/limits.h>
 
 #define LOG_BAR "--------------------------------------------"

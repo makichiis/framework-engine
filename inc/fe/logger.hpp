@@ -1,9 +1,9 @@
-#ifndef FE_LOGGER_H
-#define FE_LOGGER_H
+#ifndef FE_LOGGER_HPP 
+#define FE_LOGGER_HPP 
 
 #include <ansi/ansi-color-codes.h>
 
-#include <stdio.h>
+#include <cstdio>
 
 enum LogLevel {
     LOG_LEVEL_INFO = 0,
