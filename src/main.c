@@ -1,3 +1,15 @@
+/************************************************************
+ * Framework Engine
+ * makichiis. All rights reserved.
+ *
+ * All code and declarations in this file are relevant 
+ * only to the driver code, hence their use here.
+ *
+ * The only headers relevant to the Framework Engine 
+ * API are located in ${root}/inc/fe/, but this may 
+ * change.
+ ************************************************************/ 
+
 #include <glad/gl.h>
 #include <GLFW/glfw3.h> 
 
@@ -7,17 +19,12 @@
 #include <fe/err.h>
 
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
 #include <linux/limits.h>
 
-#define DEFAULT_WINDOW_LENGTH 600 
-#define DEFAULT_WINDOW_HEIGHT 400 
-#define DEFAULT_WINDOW_TITLE "Framework Engine"
-
-#define CURRENT_MONITOR NULL 
-#define NO_CONTEXT_SHARE NULL 
-
-#define LOG_BAR "----------------------------------"
+#define LOG_BAR "--------------------------------------------"
 
 #ifndef FE_VERSION
 #pragma GCC warning "This file is likely not being built by CMake,"\
@@ -44,13 +51,13 @@ int verify_working_directory();
 // TODO: Figure out basic module/mesh/render pipeline
 // TODO: Decide on voxel structure(s)
 
-int main() {
+int main(int argc, const char** argv) {
     char cwd[PATH_MAX];
 
-#pragma GCC diagnostic push 
-#pragma GCC diagnostic ignored "-Wunused-result"
-    getcwd(cwd, sizeof cwd);
-#pragma GCC diagnostic pop
+    if (!getcwd(cwd, sizeof cwd)) {
+        FE_FATAL("Could not get CWD. Is this running on Linux at all?");
+        return FE_ERR_INFALLIBLE;
+    }
 
     FE_INFO("cwd: %s", cwd);
 
@@ -61,6 +68,8 @@ int main() {
     }
 
     FE_DEBUG("folder '%s/resources' exists.", cwd);
+
+    FE_INFO("Initializing GLFW...");
 
     if (glfwInit() == GLFW_FALSE) {
         FE_FATAL("Could not initialize GLFW.");
@@ -76,11 +85,11 @@ int main() {
 
     // replace with program options 
     GLFWwindow* window = glfwCreateWindow(
-        DEFAULT_WINDOW_LENGTH,
-        DEFAULT_WINDOW_HEIGHT,
-        DEFAULT_WINDOW_TITLE,
-        CURRENT_MONITOR,
-        NO_CONTEXT_SHARE 
+        FE_GLFW_DEFAULT_WINDOW_LENGTH,
+        FE_GLFW_DEFAULT_WINDOW_HEIGHT,
+        FE_GLFW_DEFAULT_WINDOW_TITLE,
+        FE_GLFW_CURRENT_MONITOR,
+        FE_GLFW_NO_CONTEXT_SHARE 
     ); 
 
     if (!window) {
@@ -90,6 +99,9 @@ int main() {
 
     glfwMakeContextCurrent(window);
 
+    // TODO: Event subscriber pattern that attaches multiple callbacks 
+    // to base callback (it isnt that deep, just call them in the 
+    // base callback)
     glfwSetKeyCallback(window, fe_base_glfw_key_callback);
 
     if (!gladLoadGL(glfwGetProcAddress)) {
@@ -108,6 +120,14 @@ int main() {
     FE_INFO(LOG_BAR);
 
     FE_WARNING("Finish this project by September 18th.");
+
+#ifdef DEBUG 
+    if (argc >= 2 && strcmp(argv[1], "dont") == 0) {
+        FE_WARNING("This is an init test run. Shutting down.");
+        glfwTerminate();
+        return 0;
+    }
+#endif
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);

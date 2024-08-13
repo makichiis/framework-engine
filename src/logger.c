@@ -1,3 +1,4 @@
+#include "fe/err.h"
 #include <fe/logger.h> 
 #include <ansi/ansi-color-codes.h>
 
@@ -31,7 +32,7 @@ void fe_log(enum LogLevel level, FILE* out, const char* fmt, ...) {
             break;
         case LOG_LEVEL_DEBUG:
             logging_prefix = LOGGING_PREFIX_DEBUG;
-            fprintf(out, ANSI_CYN);
+            fprintf(out, ANSI_BLU);
             break;
         default:
             break;
@@ -39,9 +40,16 @@ void fe_log(enum LogLevel level, FILE* out, const char* fmt, ...) {
 
     char localtime_buf[32];
     time_t now = time(NULL);
-    strftime(localtime_buf, sizeof localtime_buf, "%Y-%m-%d %H:%M:%S ", localtime(&now));
+    size_t res = strftime(localtime_buf, sizeof localtime_buf, 
+                          "%Y-%m-%d %H:%M:%S ", localtime(&now));
 
-    size_t localtime_strlen = strlen(localtime_buf);
+    if (res == 0) {
+        // how do i log this lol 
+        fprintf(stderr, "Logger failed to write.\n");
+        exit(FE_ERR_LOGGER_FAIL);
+    }
+
+    size_t localtime_strlen = res;
     size_t logprefix_strlen = strlen(logging_prefix);
 
     char* log_fmt = malloc(strlen(fmt) 
