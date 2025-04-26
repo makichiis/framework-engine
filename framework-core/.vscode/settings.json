@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "cstddef": "cpp",
+        "system_error": "cpp",
+        "xlocale": "cpp",
+        "unordered_set": "cpp",
+        "iostream": "cpp"
+    },
+    "C_Cpp.default.compilerPath": "C:/Users/makii/.devtools/w64devkit/bin/g++.exe"
+}

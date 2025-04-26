@@ -1,0 +1,96 @@
+cmake_minimum_required(VERSION 3.1...3.29)
+
+set(PROJECT_NAME "framework")
+
+project(
+  ${PROJECT_NAME}
+  VERSION 1.0
+  LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+
+string(TIMESTAMP TIME_OF_BUILD "UTC %Y-%m-%d @ %H:%M" UTC)
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 0)
+set(VERSION_PATCH 1)
+
+message("Source directory: ${CMAKE_SOURCE_DIR}")
+message("Target directory: ${CMAKE_CURRENT_BINARY_DIR}")
+
+# temporary, add debug state check later 
+# https://cmake.org/cmake/help/book/mastering-cmake/chapter/Testing%20With%20CMake%20and%20CTest.html
+# ^-- for testing via cmake 
+if(DEBUG)
+  add_compile_definitions(DEBUG)
+  set(WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/")
+else()
+  add_compile_options(-Werror -O3 -Wall)
+  set(WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+endif(DEBUG)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Add common include directories
+include_directories(${CMAKE_SOURCE_DIR}/include/)
+include_directories(${CMAKE_SOURCE_DIR}/lib/glfw/include/)
+include_directories(${CMAKE_SOURCE_DIR}/lib/glad/include/)
+include_directories(${CMAKE_SOURCE_DIR}/lib/glm/include/)
+
+# Add the external libraries as subdirectories (assuming CMakeLists.txt exists in these)
+add_subdirectory(lib/glfw)
+add_subdirectory(lib/glad)
+
+# Global compile options
+add_compile_options(-DFE_VERSION -DFE_VERSION_TIME="${TIME_OF_BUILD}"
+  -DFE_VERSION_MAJOR=${VERSION_MAJOR} 
+  -DFE_VERSION_MINOR=${VERSION_MINOR} 
+  -DFE_VERSION_PATCH=${VERSION_PATCH})
+
+# Build the shared lib
+add_library(${PROJECT_NAME} SHARED 
+  src/rootdef.cpp 
+  src/object.cpp 
+  src/scene_manager.cpp
+  src/resource_manager.cpp 
+)
+
+# Link necessary libraries to the shared library
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad)
+
+# -- Tests --
+
+add_executable(${PROJECT_NAME}_test1
+  test/test_1_library_integrity.cpp  
+)
+
+add_executable(${PROJECT_NAME}_test2
+  test/test_2_rms.cpp 
+)
+
+add_executable(${PROJECT_NAME}_test3
+  test/test_3_scene_graph_stress.cpp 
+)
+
+target_link_libraries(${PROJECT_NAME}_test1 PRIVATE ${PROJECT_NAME} glfw glad)
+target_link_libraries(${PROJECT_NAME}_test2 PRIVATE ${PROJECT_NAME} glfw glad)
+target_link_libraries(${PROJECT_NAME}_test3 PRIVATE ${PROJECT_NAME} glfw glad)
+
+set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test1 PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+
+set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test2 PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+
+set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test3 PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+
+enable_testing()
+add_test(NAME "Library Integrity" COMMAND ${PROJECT_NAME}_test1)
+add_test(NAME "Resource Manager" COMMAND ${PROJECT_NAME}_test2)
+add_test(NAME "Scene Graph Stress Test" COMMAND ${PROJECT_NAME}_test3)

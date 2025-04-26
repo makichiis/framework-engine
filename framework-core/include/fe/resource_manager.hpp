@@ -1,0 +1,89 @@
+#ifndef FE_RMS_HPP
+#define FE_RMS_HPP
+
+#include <memory_resource>
+#include <unordered_set>
+#include <type_traits>
+#include <cassert>
+
+namespace fe {
+
+class Object;
+
+template <class T>
+concept ObjectType = std::is_base_of_v<Object, T>;
+
+class ResourceManager {
+public:
+    using Allocator = std::pmr::polymorphic_allocator<Object>;
+#ifndef DEBUG
+private:
+#endif 
+    // TODO: Make template. Refactored as non-template in order to
+    // temporarily resolve circular dependency issues.
+    Allocator alloc_;
+
+    std::unordered_set<Object*> allocated_objects_;
+    std::unordered_set<Object*> tentative_objects_;
+
+public:
+    ResourceManager();
+    ResourceManager(Allocator alloc);
+
+    ~ResourceManager();
+
+    /**
+     * @brief Creates an unowned object managed by this resource. Must be freed
+     * via call to `this->DestroyObject(T)`. 
+     * @note If calling this function from within a script or runtime drivers,
+     * `Object::AddChild<T>` handles object allocation AND transfer of ownership
+     * from RMS to parent object. 
+     */
+    template <ObjectType T, class... Args>
+    T* CreateObject(Args&&... ctor_args) {
+        T* obj = alloc_.template new_object<T>(std::forward<Args>(ctor_args)...);
+        obj->resource_manager = this;
+
+        allocated_objects_.insert(obj);
+
+        return obj;
+    }
+
+    /**
+     * @brief Destroy `obj` allocated by this resource manager. Destroys all children. 
+     */
+    template <ObjectType T>
+    void DestroyObject(T* obj) {
+        assert(object_is_in_alloc_heap_(dynamic_cast<Object*>(obj)));
+
+        for (auto* child : obj->children) {
+            // DO NOT delete child if it is tentative, even if the current object is.
+            if (object_is_tentative_(child)) continue;
+            DestroyObject(child);
+        }
+
+        allocated_objects_.erase(obj);
+        tentative_objects_.erase(obj);
+
+        alloc_.template delete_object<T>(obj);
+    }
+
+    /**
+     * @brief Grants this resource manager ownership of `obj` allocated by it. Children of `obj`
+     * are recursively treated as tentative objects. 
+     */
+    template <ObjectType T>
+    void TakeOwnership(T* obj) {
+        assert(object_is_in_alloc_heap_(dynamic_cast<Object*>(obj)));
+
+        tentative_objects_.insert(obj);
+    }
+
+private:
+    bool object_is_in_alloc_heap_(Object* obj);
+    bool object_is_tentative_(Object* obj);
+};
+
+}
+
+#endif
