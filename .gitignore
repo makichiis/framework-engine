@@ -2,3 +2,5 @@ build/
 .cache/
 .vscode/
 framework-core/.vscode/
+framework-core/test/a.exe
+framework-core/test/libframework.dll
