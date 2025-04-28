@@ -17,7 +17,7 @@ Avoid using abbreviations that would __only__ be intuitive to an esoteric demogr
 > Note: Avoid usage of [Hungarian notation](https://en.wikipedia.org/wiki/Hungarian_notation) 
 
 ### Namespaces
-Namespaces are written as mnemonics in lowercase (e.g. `std` = `standard library`). The top-level Framework Engine namespace is specified as `fe`.
+Namespaces are written as mnemonics in lowercase (e.g. `std` = `standard library`). The top-level Framework Engine namespace is specified as `fe`. Namespaces with sufficiently short meanings may use full words, e.g., all objects declared under `fe/objects/sample_objects/` are defined within the namespace `fe::sample`.
 
 ###  Classes and Class Members
 
