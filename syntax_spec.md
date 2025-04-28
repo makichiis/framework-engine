@@ -115,7 +115,7 @@ class ObjectList {
 
 ### Indentation Style 
 
-In C++ and other C-derived languages, curly braces denote the beginning and end of a nested block of code. The leading curly brace of a block code should be on the same line as the last character of the function signature/ condition clause which precedes it. Conditional statements and loops with only one statement do not require curly braces. Conditional statements and loops which do not exceeds 80 characters may be entirely one-line. This is a modification of *K&R indentation*.
+In C++ and other C-derived languages, curly braces denote the beginning and end of a nested block of code. The leading curly brace of a block code should be on the same line as the last character of the function signature/condition clause which precedes it. Conditional statements and loops with only one statement do not require curly braces. Conditional statements and loops which do not exceed 80 characters may be entirely one-line. This is a modification of *K&R indentation*.
 
 ```cpp
 #include <iostream>
