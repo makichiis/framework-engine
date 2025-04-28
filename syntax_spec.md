@@ -26,6 +26,35 @@ Namespaces are written as mnemonics in lowercase (e.g. `std` = `standard library
 - Public class attributes - Class attributes which are intended to be interfaced follow `snake_case` naming syntax.
 - Private class members - Class members (attributes and functions) which are  internal should follow `snake_case_underscore_postfix_` naming. E.g., the allocator within `fe::ResourceManager` is `fe::ResourceManager::alloc_`.
 
+### Class Constructors
+
+The names of class constructors reflect the name of their encapsulating class. As a result, there is little need to specify how to format them; however, it is important to decide how constructor function signatures should be designed.
+
+When calling parameterized constructors -- i.e., constructors which take as input values that directly map to attributes of their encapsulating type -- it is important to disambiguate the parameters and the class attributes themselves.
+
+For example, the following is ambiguous:
+```cpp
+class Clazz {
+public:
+    Attr attr;
+
+    // ambiguous
+    Clazz(Attr attr) : attr{ attr } {}
+};
+```
+
+Instead, constructor attribute parameters should be syntactically distinguished from their respective values. In Framework, that is done with a `p_` prefix (for parameter):
+
+```cpp
+class Clazz {
+public:
+    Attr attr;
+
+    // much better
+    Clazz(Attr p_attr) : attr{ p_attr } {}
+};
+```
+
 ### Global Functions
 Functions which are global should follow `snake_case` syntax to distinguish them from class functions.
 
