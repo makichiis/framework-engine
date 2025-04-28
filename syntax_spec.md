@@ -4,7 +4,7 @@ This document outlines the general syntactical and semantic structure of the Fra
 ## Naming
 The names of symbols should always be intuitive and make the intention/structure of a symbol clear. Additionally, name of a variable should not concern itself with code/functionality with which such  variable will be used by (e.g., `add(x, y)` suffices and naming `x` as  `left_hand_side_operand_of_an_add_call` is not necessary).
 
-Variable and parameter names may contain abbreviations that would be intuitive or straightforward for a typical programmer. Some examples include:
+Variable and parameter names may contain abbreviations which are intuitive or straightforward to a typical programmer. Some examples include:
 - `obj` - short for "Object" (not to confuse with `.obj` model files).
 - `i/j/k` - a common series of unary symbols which denote levels of nested iteration/looping.
 - `ctor` - an abbreviation of "constructor".
@@ -41,7 +41,7 @@ public:
         SomeBadlyNamedFunction(); // whether this is a class function or a global one isnt clear.
         some_goodly_named_function(); // very good.
     }
-} 
+};
 ```
 
 ### Variables
@@ -102,7 +102,7 @@ int main() {
     }
 
     if (input < 0)
-        std::cout << "A negative number was a statistically likely result...";
+        std::cout << "A negative number was the statistically likely result...";
     else std::cout << "A positive number. Huh.";
 
     std::endl(std::cout);
