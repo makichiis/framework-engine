@@ -36,8 +36,8 @@ public:
      * @brief Creates an unowned object managed by this resource. Must be freed
      * via call to `this->DestroyObject(T)`. 
      * @note If calling this function from within a script or runtime drivers,
-     * `Object::AddChild<T>` handles object allocation AND transfer of ownership
-     * from RMS to parent object. 
+     * `fe::Object::AddChild<T>` handles object allocation AND transfer of
+     * ownership from RMS to parent object. 
      */
     template <ObjectType T, class... Args>
     T* CreateObject(Args&&... ctor_args) {
@@ -50,7 +50,7 @@ public:
     }
 
     /**
-     * @brief Destroy `obj` allocated by this resource manager. Destroys all children. 
+     * @brief Destroy `obj` allocated by this resource manager. Destroys all owned children. 
      */
     template <ObjectType T>
     void DestroyObject(T* obj) {
@@ -79,6 +79,16 @@ public:
         tentative_objects_.insert(obj);
     }
 
+    /**
+     * @brief Determines whether `object` is tentative, i.e., owned directly by this
+     * resource manager rather than a parent object (regardless of whether any such object exists). 
+     * @return `true` if this object is tentative. `false` if it is owned by another object. 
+     */
+    template <ObjectType T>
+    inline bool ObjectIsTentative(T* object) {
+        return object_is_tentative_(dynamic_cast<Object*>(object));
+    }
+
 private:
     bool object_is_in_alloc_heap_(Object* obj);
     bool object_is_tentative_(Object* obj);
@@ -86,4 +96,4 @@ private:
 
 }
 
-#endif
+#endif 

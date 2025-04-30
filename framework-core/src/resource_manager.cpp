@@ -12,6 +12,12 @@ fe::ResourceManager::~ResourceManager() {
 
     while (!allocated_objects_.empty()) {
         auto* obj = *allocated_objects_.begin();
+        
+        if (obj->parent) {
+            obj->parent->children.erase(obj); // Prevent hanging child reference (issue #1)
+            obj->parent = nullptr;
+        }
+
         DestroyObject(obj);
     }
 }

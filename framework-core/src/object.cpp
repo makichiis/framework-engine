@@ -10,15 +10,10 @@ void fe::Object::UnbindFromParent() {
     resource_manager->TakeOwnership(this);
 }
 
-bool fe::Object::remove_child_and_shift_(Object* obj) {
-    if (children.empty()) return false;
+bool fe::Object::remove_child_(Object* obj) {
+    auto obj_it = children.find(obj);
+    if (obj_it == children.end()) return false;
 
-    for (decltype(children.size()) i = 0; i < children.size() - 1; ++i) {
-        if (children.at(i) == obj) std::swap(children.at(i), children.at(i+1));
-    }
-
-    if (children.back() != obj) return false;
-
-    children.pop_back();
+    children.erase(obj_it);
     return true;
 }

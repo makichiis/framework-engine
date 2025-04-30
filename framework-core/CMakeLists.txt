@@ -71,9 +71,14 @@ add_executable(${PROJECT_NAME}_test3
   test/test_3_scene_graph_stress.cpp 
 )
 
+add_executable(${PROJECT_NAME}_test4
+  test/test_4_renderer_batch.cpp
+)
+
 target_link_libraries(${PROJECT_NAME}_test1 PRIVATE ${PROJECT_NAME} glfw glad)
 target_link_libraries(${PROJECT_NAME}_test2 PRIVATE ${PROJECT_NAME} glfw glad)
 target_link_libraries(${PROJECT_NAME}_test3 PRIVATE ${PROJECT_NAME} glfw glad)
+target_link_libraries(${PROJECT_NAME}_test4 PRIVATE ${PROJECT_NAME} glfw glad)
 
 set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test1 PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
@@ -90,7 +95,13 @@ set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test3 PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
+set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test4 PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+
 enable_testing()
 add_test(NAME "Library Integrity" COMMAND ${PROJECT_NAME}_test1)
 add_test(NAME "Resource Manager" COMMAND ${PROJECT_NAME}_test2)
 add_test(NAME "Scene Graph Stress Test" COMMAND ${PROJECT_NAME}_test3)
+add_test(NAME "Renderer Batch" COMMAND ${PROJECT_NAME}_test4)
