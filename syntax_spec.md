@@ -141,8 +141,6 @@ int main() {
 #### Spacing
 In general, every line of code must be indented with whitespace in multiples of  four. Most editors apply this via `TAB` (or allow you to make it do as such).
 
-
-
 > Exceptions may apply when the readability of a line of code benefits from
 line breakage and mid-line alignments (particularly with builder patterns), e.g.:
 > ```cpp
@@ -158,4 +156,33 @@ int x = 5; // Note variable decl spacing, also.
 int y = 2;
 int z = x + y;
 int nums[3] = { x, y, z };
+```
+
+#### Namespaces
+Symbols defined within a namespace should be indented at the same level as their encapsulating namespace, but not the same as their class (see `fe::internal` example below).
+
+## Internal Implementations - Data Structures
+Implementations of data structures that are used solely within `framework-core` may follow C++ standard library naming and structure conventions in order to be consistent with other data structures used from it. Any data structure implemented for use within Framework should be under the `fe::internal` namespace.
+
+Any sentinel data structures/helper functions should remain private to their encapsulating data structures.
+
+Example:
+```cpp
+namespace fe::internal {
+
+template <class T>
+concept Comparable = std::three_way_comparable<T>;
+
+template <Comparable ValueType>
+class avl_tree
+private:    
+    struct avl_node_ {
+        ValueType value;
+        avl_node_* left;
+        avl_node_* right;
+    };
+
+public:
+    bool find(const ValueType& value) {...}
+}
 ```
