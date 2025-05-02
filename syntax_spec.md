@@ -184,7 +184,7 @@ private:
 
 public:
     bool find(const ValueType& value) {...}
-}
+};
 
 }
 ```
