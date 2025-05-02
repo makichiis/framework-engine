@@ -174,7 +174,7 @@ template <class T>
 concept Comparable = std::three_way_comparable<T>;
 
 template <Comparable ValueType>
-class avl_tree
+class avl_tree {
 private:    
     struct avl_node_ {
         ValueType value;
@@ -184,5 +184,7 @@ private:
 
 public:
     bool find(const ValueType& value) {...}
+}
+
 }
 ```
