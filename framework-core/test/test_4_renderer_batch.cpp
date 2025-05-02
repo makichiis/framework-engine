@@ -1,5 +1,7 @@
 #include <iostream>
 
+#define DEBUG
+
 #include <fe/scene_manager.hpp>
 #include <fe/resource_manager.hpp>
 #include <fe/objects/components/renderer.hpp>
@@ -33,6 +35,7 @@ int main() {
 
     auto renderless_object = main_scene->AddChild<Object>("Renderless Object");
     (void)renderless_object;
+
 
     assert(!"Not fully implemented. Failing for clarity."); // not finished
 }

@@ -56,11 +56,24 @@ public:
     void DestroyObject(T* obj) {
         assert(object_is_in_alloc_heap_(dynamic_cast<Object*>(obj)));
 
-        for (auto* child : obj->children) {
-            // DO NOT delete child if it is tentative, even if the current object is.
-            if (object_is_tentative_(child)) continue;
-            DestroyObject(child);
+        if (obj->parent) {
+            obj->parent->children.erase(obj); // Prevent hanging child reference (issue #1)
+            obj->parent = nullptr;
         }
+
+        // Destroy all children, forfeit tentative objects.
+        while (!obj->children.empty()) {
+            auto child_it = obj->children.begin();
+            
+            if (object_is_tentative_(*child_it)) {
+                obj->children.erase(child_it);
+                continue;
+            }
+
+            DestroyObject(*child_it);
+        }
+        
+        // TODO: (when event system) fire unload event (destructors work too though)
 
         allocated_objects_.erase(obj);
         tentative_objects_.erase(obj);
@@ -69,8 +82,8 @@ public:
     }
 
     /**
-     * @brief Grants this resource manager ownership of `obj` allocated by it. Children of `obj`
-     * are recursively treated as tentative objects. 
+     * @brief Grants this resource manager ownership of `obj` allocated by it. Non-tentative children 
+     * of `obj` are recursively treated as tentative objects unless accessed directly. 
      */
     template <ObjectType T>
     void TakeOwnership(T* obj) {

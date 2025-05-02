@@ -27,6 +27,8 @@ void add_lots_of_objects(Object* root, int max_level, int level=0) {
 int main() {
     ResourceManager rms;
 
+    std::cout << "Starting stress test...\n";
+
     auto start = std::chrono::steady_clock::now();
 
     auto scene = rms.CreateObject<Scene>("Scene");
@@ -47,8 +49,5 @@ int main() {
     end = std::chrono::steady_clock::now();
     std::cout << "All objects destroyed in " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms\n";
 
-    // Test issue #1 (http://github.com/makichiis/framework-engine/issues/1). Should be freed by ResourceManager destructor.
-    auto dummy = rms.CreateObject<Object>("Dummy Object"); 
-    auto dummy_child = dummy->AddChild<Object>("Dummy Child");
-    (void)dummy_child;
+    
 }
