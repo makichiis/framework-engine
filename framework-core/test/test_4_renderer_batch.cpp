@@ -14,7 +14,7 @@ int main() {
     ResourceManager resource_manager;
     SceneManager scene_manager(&resource_manager);
 
-    auto main_scene = scene_manager.AddScene<Scene>("Main Scene");
+    auto main_scene = scene_manager.CreateScene<Scene>("Main Scene");
     scene_manager.SetCurrentScene(main_scene);
 
     auto first_cube = main_scene->AddChild<Cube>("First Cube");

@@ -125,7 +125,7 @@ public:
         if (!component_assigned_<T>()) return;
 
         auto component = dynamic_cast<T*>(components_by_type.extract(typeid(T)));
-        if (resource_manager->ObjectIsTentative(component))
+        if (!resource_manager->ObjectIsTentative(component))
             resource_manager->DestroyObject(component);
     }
 

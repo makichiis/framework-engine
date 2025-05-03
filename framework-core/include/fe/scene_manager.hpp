@@ -27,7 +27,7 @@ public:
      * objects managed by the internal resource manager. 
      */
     template <SceneType T>
-    void AddExistingScene(T* scene) {
+    void AddScene(T* scene) {
         scenes_.insert(scene);
     }
 
@@ -37,7 +37,7 @@ public:
      * objects managed by the internal resource manager. 
      */ 
     template <SceneType T, class... Args>
-    T* AddScene(Args&&... scene_ctor_args) {
+    T* CreateScene(Args&&... scene_ctor_args) {
         T* scene = resource_manager_->CreateObject<T>(std::forward<Args>(scene_ctor_args)...);
         scenes_.insert(scene);
 
