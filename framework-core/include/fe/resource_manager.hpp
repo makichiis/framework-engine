@@ -1,5 +1,5 @@
-#ifndef FE_RMS_HPP
-#define FE_RMS_HPP
+#ifndef FE_RESOURCE_MANAGER_HPP
+#define FE_RESOURCE_MANAGER_HPP
 
 #include <memory_resource>
 #include <unordered_set>
