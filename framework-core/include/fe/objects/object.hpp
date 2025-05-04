@@ -16,6 +16,7 @@
 namespace fe {
 
 class Component;
+class Renderer;
 
 class Object {
 public:
@@ -149,6 +150,10 @@ private:
     template <class T>
     void insert_component_(T* component) {
         components_by_type.insert({ typeid(T), dynamic_cast<Component*>(component) });
+    
+        if constexpr (std::is_base_of_v<Renderer, T>) {
+            resource_manager->MarkObjectRenderable(this);
+        }
     }
 };
 

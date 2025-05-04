@@ -23,7 +23,7 @@ int main() {
     auto camera = scene->AddChild<Camera>("Main Camera");
     assert(scene->children.size() == 1);
 
-    scene->AddChild<Object>("Some Object");
+    obj = scene->AddChild<Object>("Some Object");
     assert(scene->children.size() == 2);
 
     scene->RemoveChild(camera);

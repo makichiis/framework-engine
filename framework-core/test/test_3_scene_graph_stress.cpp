@@ -34,8 +34,8 @@ int main() {
     auto scene = rms.CreateObject<Scene>("Scene");
     add_lots_of_objects(scene, 9);
 
-    std::cout << "Objects allocated: " << rms.allocated_objects_.size();
-    std::cout << " (~" << ((sizeof(Object) * rms.allocated_objects_.size()) + rms.allocated_objects_.size() * 8) / 1000 << " KB) ";
+    std::cout << "Objects allocated: " << rms.scene_graph_.all_objects.size();
+    std::cout << " (~" << ((sizeof(Object) * rms.scene_graph_.all_objects.size()) + rms.scene_graph_.all_objects.size() * 8) / 1000 << " KB) ";
 
     auto end = std::chrono::steady_clock::now();
     std::cout << "in " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms\n";

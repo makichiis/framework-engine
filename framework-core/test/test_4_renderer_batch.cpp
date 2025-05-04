@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define DEBUG
+// #define DEBUG
 
 #include <fe/scene_manager.hpp>
 #include <fe/resource_manager.hpp>
