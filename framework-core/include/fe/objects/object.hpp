@@ -72,25 +72,6 @@ public:
     }
 
     /**
-     * @brief Assigns a tentative component to this object.
-     * @tparam T Type of the component to be added. Must be derived from `fe::Component`.
-     * @param component Pointer to the component to be added.
-     * @returns Pointer to the added component.
-     */
-    template <class T>
-    T* SetComponent(T* component) requires (std::is_base_of_v<Component, T>) {
-        assert(!component_assigned_<T>());
-
-        if (!resource_manager->ObjectIsTentative(component)) {
-            std::cerr << "[WARNING]: This object (at " << component << ") is not tentative. Assigning it to this object is unsafe. "
-                      << "Consider using `CreateComponent<T>` for assigning a *new* component to this object.\n";
-        }
-
-        insert_component_(component);
-        return component;
-    }
-
-    /**
      * @brief Creates a new component object of type `T` and makes it an owned component of this object.
      * @tparam T Type of the component to be added. Must be derived from `fe::Component`. 
      * @tparam Args Types of the arguments to be passed to the constructor of the new component.
@@ -101,6 +82,7 @@ public:
 
         T* component = resource_manager->CreateObject<T>(std::forward<Args>(ctor_args)...);
         insert_component_(component);
+        component->parent = dynamic_cast<Object*>(this);
 
         return component;
     }
@@ -125,8 +107,25 @@ public:
     void RemoveComponent() requires (std::is_base_of_v<Component, T>) {
         if (!component_assigned_<T>()) return;
 
-        auto component = dynamic_cast<T*>(components_by_type.extract(typeid(T)));
+        auto component = dynamic_cast<T*>(components_by_type.extract(typeid(T)).mapped());
+        if constexpr (std::is_base_of_v<Renderer, T>) {
+            resource_manager->MarkObjectRenderable(this, false);
+        }
+
         if (!resource_manager->ObjectIsTentative(component))
+            resource_manager->DestroyObject(component);
+    }
+
+    template <class T=Component>
+    void RemoveComponentById(const std::type_info& component_typeid) {
+        if (components_by_type.find(component_typeid) == components_by_type.end())
+            return;
+        
+        auto component = dynamic_cast<T*>(components_by_type.extract(std::type_index(component_typeid)).mapped());
+        if (dynamic_cast<Renderer*>(component))
+            resource_manager->MarkObjectRenderable(this, false);
+
+        if (!resource_manager->ObjectIsRenderable(component))
             resource_manager->DestroyObject(component);
     }
 
@@ -151,6 +150,7 @@ private:
     void insert_component_(T* component) {
         components_by_type.insert({ typeid(T), dynamic_cast<Component*>(component) });
     
+        // if it becomes a problem, refactor this as a runtime check 
         if constexpr (std::is_base_of_v<Renderer, T>) {
             resource_manager->MarkObjectRenderable(this);
         }

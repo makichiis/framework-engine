@@ -48,6 +48,4 @@ int main() {
 
     end = std::chrono::steady_clock::now();
     std::cout << "All objects destroyed in " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms\n";
-
-    
 }

@@ -18,7 +18,7 @@ namespace internal {
 /**
  * @brief Lookup table list for allocated polymorphic objects. 
  */
-struct SceneGraphLUT {
+struct scene_graph_lut {
     /**
      * @brief All objects referenced by this LUT. Any objects referenced in
      * `tenative` and `renderable` must also be in `all_objects`. 
@@ -57,20 +57,40 @@ struct SceneGraphLUT {
     /**
      * @brief Returns `true` if `obj` is indexed by this LUT. 
      */
-    bool is_indexed(Object* obj);
+    bool is_indexed(Object* obj) const;
 
     /**
      * @brief Returns `true` if `obj` is tentative. 
      */
-    bool is_tentative(Object* obj);
+    bool is_tentative(Object* obj) const;
 
     /**
      * @brief Returns `true` if `obj` contains a component derived from `fe::Renderer`. 
      */
-    bool is_renderable(Object* obj);
+    bool is_renderable(Object* obj) const;
 };
 
 }
+
+class SceneGraphView {
+public:
+    /**
+     * @brief All objects referenced by this LUT. Any objects referenced in
+     * `tenative` and `renderable` must also be in `all_objects`. 
+     */
+    const std::unordered_set<Object*>& all_objects; 
+    /**
+     * @brief Objects marked as `tentative`, i.e., they are owned by their
+     * allocator, rather than their immediate parent in the scene graph. 
+     */
+    const std::unordered_set<Object*>& tentative;
+    /**
+     * @brief Objects which contain components derived from `fe::Renderer`. 
+     */
+    const std::unordered_set<Object*>& renderable;
+
+    SceneGraphView(const internal::scene_graph_lut& scene_graph);
+};
 
 class ResourceManager {
 public:
@@ -83,7 +103,7 @@ private:
     Allocator alloc_;
 
     // Unordered sets are used to index object attributes for fast lookup
-    internal::SceneGraphLUT scene_graph_;
+    internal::scene_graph_lut scene_graph_;
 
 public:
     ResourceManager();
@@ -103,7 +123,7 @@ public:
         T* obj = alloc_.template new_object<T>(std::forward<Args>(ctor_args)...);
         obj->resource_manager = this;
 
-        scene_graph_.all_objects.insert(obj);
+        scene_graph_.add_to_index(dynamic_cast<Object*>(obj));
 
         return obj;
     }
@@ -148,8 +168,9 @@ public:
     }
 
     template <ObjectType T>
-    void MarkObjectRenderable(T* obj) {
-        scene_graph_.set_renderable(obj);
+    void MarkObjectRenderable(T* obj, bool renderable=true) {
+        if (renderable) scene_graph_.set_renderable(obj);
+        else scene_graph_.renderable.erase(obj);
     }
 
     /**
@@ -158,14 +179,16 @@ public:
      * @return `true` if this object is tentative. `false` if it is owned by another object. 
      */
     template <ObjectType T>
-    inline bool ObjectIsTentative(T* obj) {
+    inline bool ObjectIsTentative(T* obj) const {
         return scene_graph_.is_tentative(dynamic_cast<Object*>(obj));
     }
 
     template <ObjectType T>
-    inline bool ObjectIsRenderable(T* obj) {
+    inline bool ObjectIsRenderable(T* obj) const {
         return scene_graph_.is_renderable(dynamic_cast<Object*>(obj));
     }
+
+    SceneGraphView GetSceneGraph() const;
 
 private:
 };
