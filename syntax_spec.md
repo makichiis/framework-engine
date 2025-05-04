@@ -19,6 +19,8 @@ Avoid using abbreviations that would __only__ be intuitive to an esoteric demogr
 ### Namespaces
 Namespaces are written as mnemonics in lowercase (e.g. `std` = `standard library`). The top-level Framework Engine namespace is specified as `fe`. Namespaces with sufficiently short meanings may use full words, e.g., all objects declared under `fe/objects/sample_objects/` are defined within the namespace `fe::sample`.
 
+> Header and header guard macro definitions that belong to the Framework Core should be prefixed with `FE_`, e.g., `framework-core/include/fe/resource_manager.hpp` is guarded with `FE_RESOURCE_MANAGER_HPP`.
+
 ###  Classes and Class Members
 
 - Class names - Class names follow `PascalCase` naming syntax. The base Framework object is defined at `fe::Object`.
