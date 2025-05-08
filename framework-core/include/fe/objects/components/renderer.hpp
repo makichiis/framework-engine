@@ -2,11 +2,14 @@
 #define FE_COMPONENT_RENDERER_HPP
 
 #include "fe/objects/components/component.hpp"
+#include "../assets/materials/material.hpp"
 
 namespace fe {
 
 class Renderer : public Component {
 public:
+    Material* material;
+
     using Component::Component;
 };
 

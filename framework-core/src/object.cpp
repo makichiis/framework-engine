@@ -6,6 +6,8 @@ fe::Object::Object(std::string p_name) : name{ p_name } {}
 
 fe::Object::~Object() {}
 
+void fe::Object::OnUpdate() {}
+
 void fe::Object::UnbindFromParent() {
     resource_manager->TakeOwnership(this);
 }

@@ -30,6 +30,11 @@ public:
     Object(std::string p_name);
     virtual ~Object();
 
+    /**
+     * @brief Called on every object before the next frame is drawn. 
+     */
+    virtual void OnUpdate();
+
     // TODO: Allow transfer of ownership between objects/between RM and object 
 
     /**
@@ -127,6 +132,11 @@ public:
 
         if (!resource_manager->ObjectIsRenderable(component))
             resource_manager->DestroyObject(component);
+    }
+
+    template <class T>
+    bool HasComponent() {
+        return components_by_type.find(typeid(T)) != components_by_type.end();
     }
 
 private:

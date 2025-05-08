@@ -52,6 +52,14 @@ add_library(${PROJECT_NAME} SHARED
   src/object.cpp 
   src/scene_manager.cpp
   src/resource_manager.cpp 
+  src/runtime_handler.cpp
+  src/shader.cpp
+  src/asset.cpp 
+  src/render_handler.cpp
+  src/basic_color_shader.cpp 
+  src/materials/default_material.cpp
+  src/renderers/default_renderer.cpp
+  src/samples/cube.cpp
 )
 
 # Link necessary libraries to the shared library
@@ -75,10 +83,15 @@ add_executable(${PROJECT_NAME}_test4
   test/test_4_renderer_batch.cpp
 )
 
-target_link_libraries(${PROJECT_NAME}_test1 PRIVATE ${PROJECT_NAME} glfw glad)
-target_link_libraries(${PROJECT_NAME}_test2 PRIVATE ${PROJECT_NAME} glfw glad)
-target_link_libraries(${PROJECT_NAME}_test3 PRIVATE ${PROJECT_NAME} glfw glad)
-target_link_libraries(${PROJECT_NAME}_test4 PRIVATE ${PROJECT_NAME} glfw glad)
+add_executable(${PROJECT_NAME}_test5
+  test/test_5_render.cpp
+)
+
+target_link_libraries(${PROJECT_NAME}_test1 PRIVATE ${PROJECT_NAME} glfw)
+target_link_libraries(${PROJECT_NAME}_test2 PRIVATE ${PROJECT_NAME} glfw)
+target_link_libraries(${PROJECT_NAME}_test3 PRIVATE ${PROJECT_NAME} glfw)
+target_link_libraries(${PROJECT_NAME}_test4 PRIVATE ${PROJECT_NAME} glfw)
+target_link_libraries(${PROJECT_NAME}_test5 PRIVATE ${PROJECT_NAME} glfw)
 
 set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test1 PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
@@ -100,8 +113,14 @@ set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test4 PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
+set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test5 PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+)
+
 enable_testing()
 add_test(NAME "Library Integrity" COMMAND ${PROJECT_NAME}_test1)
 add_test(NAME "Resource Manager" COMMAND ${PROJECT_NAME}_test2)
 add_test(NAME "Scene Graph Stress Test" COMMAND ${PROJECT_NAME}_test3)
 add_test(NAME "Renderer Batch" COMMAND ${PROJECT_NAME}_test4)
+add_test(NAME "Render" COMMAND ${PROJECT_NAME}_test5)

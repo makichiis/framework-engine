@@ -8,6 +8,8 @@ namespace fe::sample {
 class Cube : public SampleObject {
 public:
     using SampleObject::SampleObject;
+
+    Cube();
 };
 
 }
