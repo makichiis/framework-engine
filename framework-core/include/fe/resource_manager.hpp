@@ -163,8 +163,13 @@ public:
      * of `obj` are recursively treated as tentative objects unless accessed directly. 
      */
     template <ObjectType T>
-    void TakeOwnership(T* obj) {
-        scene_graph_.set_tentative(obj);
+    void MarkObjectTentative(T* obj, bool tentative=true) {
+        if (!tentative && scene_graph_.is_tentative(obj)) {
+            scene_graph_.tentative.erase(obj);
+            if (obj->parent == nullptr) DestroyObject(obj);
+        } else if (tentative) {
+            scene_graph_.set_tentative(obj);
+        }
     }
 
     template <ObjectType T>

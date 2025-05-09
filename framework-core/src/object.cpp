@@ -9,7 +9,7 @@ fe::Object::~Object() {}
 void fe::Object::OnUpdate() {}
 
 void fe::Object::UnbindFromParent() {
-    resource_manager->TakeOwnership(this);
+    resource_manager->MarkObjectTentative(this);
 }
 
 bool fe::Object::remove_child_(Object* obj) {

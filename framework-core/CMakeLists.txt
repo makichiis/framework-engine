@@ -59,6 +59,7 @@ add_library(${PROJECT_NAME} SHARED
   src/basic_color_shader.cpp 
   src/materials/default_material.cpp
   src/renderers/default_renderer.cpp
+  src/renderers/renderer.cpp
   src/samples/cube.cpp
 )
 

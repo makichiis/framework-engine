@@ -12,6 +12,10 @@ namespace fe {
  */
 namespace runtime {
 
+namespace internal {
+
+}
+
 /**
  * @brief Singleton runtime handler. 
  */
