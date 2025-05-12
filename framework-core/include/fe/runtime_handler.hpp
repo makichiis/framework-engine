@@ -2,6 +2,7 @@
 #define FE_RUNTIME_HANDLER_HPP
 
 #include <fe/resource_manager.hpp>
+#include <fe/render_handler.hpp>
 #include <fe/scene_manager.hpp>
 
 namespace fe {
@@ -22,6 +23,7 @@ namespace internal {
 class FrameworkRuntimeHandler {
 public:
     ResourceManager resource_manager;
+    RenderHandler render_handler;
     SceneManager scene_manager;
 
     /**
