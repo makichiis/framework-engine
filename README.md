@@ -1,6 +1,9 @@
 # Framework
 Voxel Game Engine written in C++. Runs on OpenGL. Still in super-alpha, pls be patient.
 
+# Requirements
+Building and using Framework Engine and Framework projects requires [Boost v1.49.0](https://www.boost.org/doc/libs/1_49_0/index.html).
+
 # Run unit tests
 ```sh
 $ cd framework-core

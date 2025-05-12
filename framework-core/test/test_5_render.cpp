@@ -16,5 +16,5 @@ int main() {
     (void)camera;
     (void)cube;
 
-
+    
 }
