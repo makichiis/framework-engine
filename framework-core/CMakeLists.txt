@@ -46,21 +46,31 @@ add_compile_options(-DFE_VERSION -DFE_VERSION_TIME="${TIME_OF_BUILD}"
   -DFE_VERSION_MINOR=${VERSION_MINOR} 
   -DFE_VERSION_PATCH=${VERSION_PATCH})
 
-# Build the shared lib
-add_library(${PROJECT_NAME} SHARED 
-  src/rootdef.cpp 
-  src/object.cpp 
-  src/scene_manager.cpp
-  src/resource_manager.cpp 
-  src/runtime_handler.cpp
-  src/assets/shader.cpp
+# Build framework core
+add_library(${PROJECT_NAME} STATIC 
+
   src/assets/asset.cpp 
-  src/render_handler.cpp
   src/assets/basic_color_shader.cpp 
+  src/assets/shader.cpp
+
   src/materials/default_material.cpp
+
+  src/meshes/mesh.cpp
+
   src/renderers/default_renderer.cpp
   src/renderers/renderer.cpp
+
   src/samples/cube.cpp
+
+  src/scene_objects/camera.cpp
+
+  src/object.cpp
+  src/render_handler.cpp
+  src/resource_manager.cpp 
+  src/rootdef.cpp 
+  src/runtime_handler.cpp
+  src/scene_manager.cpp
+
 )
 
 # Link necessary libraries to the shared library
@@ -75,7 +85,7 @@ foreach(test_source ${TEST_SOURCES})
   get_filename_component(test_name ${test_source} NAME_WE)
   
   add_executable(${test_name} ${test_source})
-  target_link_libraries(${test_name} PRIVATE ${PROJECT_NAME} glfw)
+  target_link_libraries(${test_name} INTERFACE "-E" PUBLIC ${PROJECT_NAME} glfw)
   
   set_target_properties(${PROJECT_NAME} ${test_name} PROPERTIES 
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib 
@@ -84,60 +94,3 @@ foreach(test_source ${TEST_SOURCES})
 
   add_test(NAME ${test_name} COMMAND ${test_name})
 endforeach()
-
-# add_executable(${PROJECT_NAME}_test1
-#   test/test_1_library_integrity.cpp  
-# )
-
-# add_executable(${PROJECT_NAME}_test2
-#   test/test_2_rms.cpp 
-# )
-
-# add_executable(${PROJECT_NAME}_test3
-#   test/test_3_scene_graph_stress.cpp 
-# )
-
-# add_executable(${PROJECT_NAME}_test4
-#   test/test_4_renderer_batch.cpp
-# )
-
-# add_executable(${PROJECT_NAME}_test5
-#   test/test_5_render.cpp
-# )
-
-# target_link_libraries(${PROJECT_NAME}_test1 PRIVATE ${PROJECT_NAME} glfw)
-# target_link_libraries(${PROJECT_NAME}_test2 PRIVATE ${PROJECT_NAME} glfw)
-# target_link_libraries(${PROJECT_NAME}_test3 PRIVATE ${PROJECT_NAME} glfw)
-# target_link_libraries(${PROJECT_NAME}_test4 PRIVATE ${PROJECT_NAME} glfw)
-# target_link_libraries(${PROJECT_NAME}_test5 PRIVATE ${PROJECT_NAME} glfw)
-
-# set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test1 PROPERTIES
-#   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-#   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-# )
-
-# set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test2 PROPERTIES
-#   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-#   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-# )
-
-# set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test3 PROPERTIES
-#   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-#   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-# )
-
-# set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test4 PROPERTIES
-#   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-#   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-# )
-
-# set_target_properties(${PROJECT_NAME} ${PROJECT_NAME}_test5 PROPERTIES
-#   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-#   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-# )
-
-# add_test(NAME "Library Integrity" COMMAND ${PROJECT_NAME}_test1)
-# add_test(NAME "Resource Manager" COMMAND ${PROJECT_NAME}_test2)
-# add_test(NAME "Scene Graph Stress Test" COMMAND ${PROJECT_NAME}_test3)
-# add_test(NAME "Renderer Batch" COMMAND ${PROJECT_NAME}_test4)
-# add_test(NAME "Render" COMMAND ${PROJECT_NAME}_test5)

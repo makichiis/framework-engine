@@ -9,7 +9,7 @@ class BasicColorShader : public Shader {
 public:
     using Shader::Shader;
 
-    void OnInit();
+    void OnInit() override;
 
 private:
     GLuint build_program_();

@@ -21,15 +21,20 @@ namespace internal {
  * @brief Singleton runtime handler. 
  */
 class FrameworkRuntimeHandler {
-public:
+private:
     ResourceManager resource_manager;
     RenderHandler render_handler;
     SceneManager scene_manager;
 
+public:
     /**
      * @brief Retrieves the global runtime handler. 
      */
     static FrameworkRuntimeHandler& GetRuntimeHandler();
+
+    ResourceManager *const GetResourceManager();
+    RenderHandler *const GetRenderHandler();
+    SceneManager *const GetSceneManager();
 
 private:
     FrameworkRuntimeHandler();

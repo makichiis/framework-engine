@@ -9,7 +9,7 @@ class Asset : public Object {
 public:
     using Object::Object;
 
-    void OnInit();
+    virtual void OnInit() override;
 };
 
 }

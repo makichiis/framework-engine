@@ -36,27 +36,25 @@ int main() {
     }
 
     runtime::FrameworkRuntimeHandler& runtime_handler = runtime::FrameworkRuntimeHandler::GetRuntimeHandler();
-    auto& scene_manager = runtime_handler.scene_manager;
-    auto& resource_manager = runtime_handler.resource_manager;
+    auto scene_manager = runtime_handler.GetSceneManager();
+    auto resource_manager = runtime_handler.GetResourceManager();
 
     std::cout << "test\n";
 
-    auto main_scene = scene_manager.CreateScene<Scene>("Main Scene");
-    scene_manager.SetCurrentScene(main_scene);
+    auto main_scene = scene_manager->CreateScene<Scene>("Main Scene");
+    scene_manager->SetCurrentScene(main_scene);
 
     auto first_cube = main_scene->AddChild<Cube>("First Cube");
-    // first_cube->CreateComponent<Renderer>("First Cube Renderer");
     (void)first_cube;
 
     auto second_cube = main_scene->AddChild<Cube>("Second Cube");
-    // second_cube->CreateComponent<Renderer>("Second Cube Renderer");
     (void)second_cube;
 
     auto renderless_object = main_scene->AddChild<Object>("Renderless Object");
     auto doomed_renderer = renderless_object->CreateComponent<Renderer>();
     renderless_object->RemoveComponentById(typeid(*doomed_renderer));
 
-    assert(resource_manager.GetSceneGraph().renderable.size() == 2);
+    assert(resource_manager->GetSceneGraph().renderable.size() == 2);
 
     glfwTerminate();
 }

@@ -77,7 +77,7 @@ GLint Shader::get_uniform_location_and_cache_(string_ref_t name) {
 }
 
 bool Shader::HasUniform(string_ref_t name) {
-    GLuint loc = glGetUniformLocation(program_id_, name.c_str());
+    GLint loc = glGetUniformLocation(program_id_, name.c_str());
     if (loc) {
         uniform_cache_.insert_or_assign(name, loc);
     }

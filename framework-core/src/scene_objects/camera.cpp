@@ -8,9 +8,9 @@
 
 void fe::Camera::OnCameraUpdate() {
     auto& runtime = runtime::FrameworkRuntimeHandler::GetRuntimeHandler();
-    auto resource_manager = runtime.resource_manager;
+    auto resource_manager = runtime.GetResourceManager();
 
-    for (auto&& shader : resource_manager.GetSceneGraph().shaders) {
+    for (auto&& shader : resource_manager->GetSceneGraph().shaders) {
         assert(shader->GetShaderID() != 0);
         glUseProgram(shader->GetShaderID());
 

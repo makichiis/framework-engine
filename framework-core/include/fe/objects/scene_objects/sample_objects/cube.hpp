@@ -13,7 +13,9 @@ public:
     /**
      * @brief Builds internal cube renderer and mesh.
      */
-    void OnInit();
+    void OnInit() override;
+
+    void OnTest() override;
 };
 
 }

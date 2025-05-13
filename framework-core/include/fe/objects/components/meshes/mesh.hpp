@@ -1,6 +1,7 @@
 #ifndef FE_MESH_HPP
 #define FE_MESH_HPP
 
+#include <iostream>
 #include <vector>
 
 #include "../component.hpp"
@@ -21,5 +22,7 @@ public:
 };
 
 }
+
+std::ostream& operator<<(std::ostream& os, const fe::Vertex& vertex);
 
 #endif 

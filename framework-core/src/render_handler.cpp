@@ -4,6 +4,7 @@
 #include <fe/objects/components/renderer.hpp>
 #include <fe/objects/components/meshes/mesh.hpp>
 #include <fe/objects/assets/materials/material.hpp>
+#include <fe/objects/scene_objects/sample_objects/cube.hpp>
 
 #include <glad/gl.h>
 
@@ -16,7 +17,7 @@ fe::Renderer* get_renderer(fe::Object* obj) {
     return nullptr;
 }
 
-void fe::runtime::RenderHandler::UploadObject(Object* obj) {
+void fe::runtime::RenderHandler::UploadObject(fe::Object* obj) {
     if (!obj->resource_manager->ObjectIsRenderable(obj)) {
         std::cerr << "Object " << obj << " is not renderable.\n";
         std::abort();
@@ -35,6 +36,7 @@ void fe::runtime::RenderHandler::UploadObject(Object* obj) {
         // TODO: Upload mesh. Mesh information provided by Mesh component.
 
         GLsizei vertex_sz = static_cast<GLsizei>(mesh->vertices.size() * sizeof(Vertex));
+        std::cout << "Mesh byte size: " << vertex_sz << '\n';
         // TODO: Move VAO/VBO to helper fns
 
         GLuint vao, vbo;
@@ -62,7 +64,7 @@ void fe::runtime::RenderHandler::UploadObject(Object* obj) {
         handle.vao = vao;
         handle.vbo = vbo;
         handle.ebo = 0;
-        handle.draw_count = vertex_sz;
+        handle.draw_count = mesh->vertices.size();
 
         // TODO: Cache CPU-side verts for memory efficiency 
     }
