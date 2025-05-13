@@ -31,6 +31,12 @@ public:
     virtual ~Object();
 
     /**
+     * @brief Called after this object is created. Useful as a generalized post-constructor
+     * object builder. 
+     */
+    virtual void OnInit();
+
+    /**
      * @brief Called on every object before the next frame is drawn. 
      */
     virtual void OnUpdate();
@@ -158,10 +164,13 @@ private:
 
     template <class T>
     void insert_component_(T* component) {
+        std::cout << "Is this reached?\n";
         components_by_type.insert({ typeid(T), dynamic_cast<Component*>(component) });
+        std::cout << "Is this reached?\n";
     
         // if it becomes a problem, refactor this as a runtime check 
         if constexpr (std::is_base_of_v<Renderer, T>) {
+            std::cout << "This object is renderable.\n";
             resource_manager->MarkObjectRenderable(this);
         }
     }

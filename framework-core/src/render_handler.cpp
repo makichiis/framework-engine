@@ -34,7 +34,7 @@ void fe::runtime::RenderHandler::UploadObject(Object* obj) {
     if (mesh) {
         // TODO: Upload mesh. Mesh information provided by Mesh component.
 
-        GLsizei vertex_sz = static_cast<GLsizei>(mesh->vertices.size());
+        GLsizei vertex_sz = static_cast<GLsizei>(mesh->vertices.size() * sizeof(Vertex));
         // TODO: Move VAO/VBO to helper fns
 
         GLuint vao, vbo;
@@ -81,15 +81,26 @@ void fe::runtime::RenderHandler::DrawObjects() {
         // TODO: get object transform components
         // TODO: draw override events
 
+        glUseProgram(handle.shader_program_id);
+
         glBindVertexArray(handle.vao);
         glBindBuffer(GL_ARRAY_BUFFER, handle.vbo);
 
         if (handle.ebo) {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle.ebo);
             glDrawElements(GL_TRIANGLES, handle.draw_count, GL_UNSIGNED_INT, 0);
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
+            glUseProgram(0);
+            
             continue;
         }
 
         glDrawArrays(GL_TRIANGLES, 0, handle.draw_count);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+        glUseProgram(0);
     }
 }

@@ -39,7 +39,9 @@ bool fe::internal::scene_graph_lut::is_renderable(Object* obj) const {
 fe::SceneGraphView::SceneGraphView(const internal::scene_graph_lut& scene_graph)
     : all_objects{ scene_graph.all_objects },
       tentative{ scene_graph.tentative },
-      renderable{ scene_graph.renderable } {}
+      renderable{ scene_graph.renderable },
+      shaders{ scene_graph.shaders },
+      vertex_draw_shaders{ scene_graph.vertex_draw_shaders } {}
 
 fe::ResourceManager::ResourceManager() = default;
 

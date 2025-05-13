@@ -11,7 +11,7 @@ std::variant<ShaderHandle, ShaderError> ShaderAssembler::CreateShader(GLenum typ
     glShaderSource(id, 1, &dataptr, nullptr);
     glCompileShader(id);
 
-    int success;
+    int success = 0;
     glGetShaderiv(id, GL_COMPILE_STATUS, &success);
 
     if (!success) {
@@ -21,25 +21,27 @@ std::variant<ShaderHandle, ShaderError> ShaderAssembler::CreateShader(GLenum typ
         std::string error_message(static_cast<size_t>(1 + message_length), '\0');
         glGetShaderInfoLog(id, message_length, nullptr, error_message.data());
 
-        return ShaderError{ std::move(error_message) };
+        std::cout << "uh oh\n";
+
+        return ShaderError{ error_message };
     }
 
-    return ShaderHandle{ id, type };
+    return ShaderHandle{ type, id };
 }
 
 // TODO: Shader caching ? long-term consideration
 std::variant<GLuint, ShaderError> ShaderAssembler::CreateAndLinkProgram(std::vector<ShaderHandle> shader_units) {
     GLuint program_id = glCreateProgram();
+    glUseProgram(program_id);
+
+    assert(shader_units.size() >= 2);
 
     for (auto&& shader : shader_units)
         glAttachShader(program_id, shader.id);
 
     glLinkProgram(program_id);
 
-    for (auto&& shader : shader_units)
-        glDeleteShader(shader.id);
-
-    int success;
+    int success = 0;
     glGetProgramiv(program_id, GL_LINK_STATUS, &success);
 
     if (!success) {
@@ -49,8 +51,11 @@ std::variant<GLuint, ShaderError> ShaderAssembler::CreateAndLinkProgram(std::vec
         std::string error_message(static_cast<size_t>(1 + message_length), '\0');
         glGetProgramInfoLog(program_id, message_length, nullptr, error_message.data());
 
-        return ShaderError{ std::move(error_message) };
+        return ShaderError{ error_message };
     }
+
+    for (auto&& shader : shader_units)
+        glDeleteShader(shader.id);
 
     return program_id;
 }
@@ -69,6 +74,15 @@ GLint Shader::get_uniform_location_and_cache_(string_ref_t name) {
     }
 
     return loc->second;
+}
+
+bool Shader::HasUniform(string_ref_t name) {
+    GLuint loc = glGetUniformLocation(program_id_, name.c_str());
+    if (loc) {
+        uniform_cache_.insert_or_assign(name, loc);
+    }
+
+    return loc != -1; 
 }
 
 void Shader::SetBool(string_ref_t name, bool value) {

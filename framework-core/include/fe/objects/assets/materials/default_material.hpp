@@ -9,7 +9,7 @@ class DefaultMaterial : public Material {
 public:
     using Material::Material;
 
-    DefaultMaterial();
+    void OnInit();
 };
 
 }

@@ -9,8 +9,7 @@ class Asset : public Object {
 public:
     using Object::Object;
 
-    Asset();
-    Asset(std::string p_name);
+    void OnInit();
 };
 
 }

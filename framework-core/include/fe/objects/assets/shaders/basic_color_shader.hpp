@@ -9,8 +9,8 @@ class BasicColorShader : public Shader {
 public:
     using Shader::Shader;
 
-    BasicColorShader();
-    BasicColorShader(std::string p_name);
+    void OnInit();
+
 private:
     GLuint build_program_();
 };

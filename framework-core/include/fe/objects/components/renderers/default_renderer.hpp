@@ -9,7 +9,7 @@ class DefaultRenderer : public Renderer {
 public:
     using Renderer::Renderer;
 
-    DefaultRenderer();
+    void OnInit();
 };
 
 }

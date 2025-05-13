@@ -34,8 +34,11 @@ namespace runtime {
 
 class RenderHandler {
 private:
-    std::unordered_map<Object*, internal::gl_render_handle_> uploaded_render_objects_; // Hash table for fast object query/removal 
-    std::unordered_map<Object*, internal::gl_render_handle_> skipped_objects_; // Objects set to skip drawing next frame 
+#ifdef DEBUG
+public:
+#endif 
+    std::unordered_map<Object*, fe::internal::gl_render_handle_> uploaded_render_objects_; // Hash table for fast object query/removal 
+    std::unordered_map<Object*, fe::internal::gl_render_handle_> skipped_objects_; // Objects set to skip drawing next frame 
     // TODO: Mat/mesh Batches
 public:
     /**

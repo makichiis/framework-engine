@@ -81,6 +81,11 @@ public:
 
     GLuint GetShaderID() const;
 
+    /**
+     * TODO: Type validation etc. 
+     */
+    bool HasUniform(string_ref_t name);
+
     void SetBool(string_ref_t name, bool value);
 
     void SetInt(string_ref_t name, GLint value);

@@ -6,10 +6,14 @@
 namespace fe::sample {
 
 class Cube : public SampleObject {
+
 public:
     using SampleObject::SampleObject;
 
-    Cube();
+    /**
+     * @brief Builds internal cube renderer and mesh.
+     */
+    void OnInit();
 };
 
 }

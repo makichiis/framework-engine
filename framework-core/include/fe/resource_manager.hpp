@@ -6,9 +6,12 @@
 #include <type_traits>
 #include <cassert>
 
+#include <iostream>
+
 namespace fe {
 
 class Object;
+class Shader;
 
 template <class T>
 concept ObjectType = std::is_base_of_v<Object, T>;
@@ -33,6 +36,10 @@ struct scene_graph_lut {
      * @brief Objects which contain components derived from `fe::Renderer`. 
      */
     std::unordered_set<Object*> renderable;
+
+    std::unordered_set<Shader*> shaders;
+
+    std::unordered_set<Shader*> vertex_draw_shaders;
 
     /**
      * @brief Erases `obj` -- if found -- from all tables. 
@@ -89,6 +96,10 @@ public:
      */
     const std::unordered_set<Object*>& renderable;
 
+    const std::unordered_set<Shader*>& shaders;
+    
+    const std::unordered_set<Shader*>& vertex_draw_shaders;
+
     SceneGraphView(const internal::scene_graph_lut& scene_graph);
 };
 
@@ -120,10 +131,26 @@ public:
      */
     template <ObjectType T, class... Args>
     T* CreateObject(Args&&... ctor_args) {
+        // std::cout << "Building new " << typeid(T).name() << '\n';
+        // std::flush(std::cout);
+
         T* obj = alloc_.template new_object<T>(std::forward<Args>(ctor_args)...);
+        
+        // std::cout << typeid(T).name() << " built at " << obj << ". Configuring...\n";
+        // std::flush(std::cout);
+
         obj->resource_manager = this;
 
+        // std::cout << "Adding " << typeid(T).name() << " to scene graph.\n";
+        // std::flush(std::cout);
+        
         scene_graph_.add_to_index(dynamic_cast<Object*>(obj));
+
+        if constexpr (std::is_base_of_v<Shader, T>) {
+            scene_graph_.shaders.insert(obj);
+        }
+
+        obj->OnInit();
 
         return obj;
     }
