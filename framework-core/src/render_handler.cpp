@@ -1,3 +1,5 @@
+#include <glm/gtc/type_ptr.hpp>
+
 #include <iostream>
 
 #include <fe/render_handler.hpp>
@@ -5,6 +7,9 @@
 #include <fe/objects/components/meshes/mesh.hpp>
 #include <fe/objects/assets/materials/material.hpp>
 #include <fe/objects/scene_objects/sample_objects/cube.hpp>
+#include <fe/objects/components/transform.hpp>
+
+#include <fe/objects/components/renderers/default_renderer.hpp>
 
 #include <glad/gl.h>
 
@@ -26,7 +31,7 @@ void fe::runtime::RenderHandler::UploadObject(fe::Object* obj) {
     auto renderer = get_renderer(obj);
     assert(renderer);
 
-    internal::gl_render_handle_ handle;
+    fe::internal::gl_render_handle_ handle;
     handle.shader_program_id = renderer->material->shader->GetShaderID();
 
     glUseProgram(handle.shader_program_id);
@@ -78,12 +83,34 @@ void fe::runtime::RenderHandler::DestroyObjectRenderBuffers(Object* obj) {
     // TODO
 }
 
+#define color4_to_params(color) color.r, color.g, color.b, color.a
+
 void fe::runtime::RenderHandler::DrawObjects() {
-    for (auto&& [_, handle] : this->uploaded_render_objects_) {
+    ConfigureGLParameters();
+    
+    glClearColor(color4_to_params(config.clear_color));
+    glClear(config.config_state.clear_mask);
+
+    for (auto&& [obj, handle] : this->uploaded_render_objects_) {
         // TODO: get object transform components
         // TODO: draw override events
 
         glUseProgram(handle.shader_program_id);
+
+        if (obj->HasComponent<fe::Transform>()) {
+            auto trans = obj->GetComponent<fe::Transform>();
+
+            // TODO: Filter objects by shader type to prevent useless uniform setting
+            
+            // TODO: Note, this needs to be refactored once renderer fetching is generalized. Temporary hotfix to meet deadline.
+            if (obj->HasComponent<fe::DefaultRenderer>()) {
+                glm::mat4 model = glm::identity<glm::mat4>();
+                model = glm::translate(model, trans->position);
+                model = glm::rotate(model, glm::radians(trans->rotation.angle_degrees), trans->rotation.axis);
+
+                obj->GetComponent<fe::DefaultRenderer>()->material->shader->SetMatrix4s("model", 1, GL_FALSE, glm::value_ptr(model));
+            }
+        }
 
         glBindVertexArray(handle.vao);
         glBindBuffer(GL_ARRAY_BUFFER, handle.vbo);
@@ -104,5 +131,20 @@ void fe::runtime::RenderHandler::DrawObjects() {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
         glUseProgram(0);
+    }
+}
+
+void fe::runtime::RenderHandler::ConfigureGLParameters() {
+    config.config_state = {};
+    config.config_state.clear_mask |= GL_COLOR_BUFFER_BIT;
+
+    if (config.depth) {
+        glEnable(GL_DEPTH_TEST);
+        config.config_state.clear_mask |= GL_DEPTH_BUFFER_BIT;
+    }
+
+    if (config.anti_aliasing) {
+        // TODO
+        std::cerr << "[Warning]: Anti-aliasing is not yet implemented.\n";
     }
 }

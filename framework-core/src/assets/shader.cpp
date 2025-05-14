@@ -66,6 +66,7 @@ GLuint Shader::GetShaderID() const {
 
 GLint Shader::get_uniform_location_and_cache_(string_ref_t name) {
     auto loc = uniform_cache_.find(name);
+    glUseProgram(GetShaderID());
 
     if (loc == uniform_cache_.end()) {
         GLint res = glGetUniformLocation(program_id_, name.c_str());

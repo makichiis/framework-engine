@@ -5,7 +5,7 @@
 
 namespace fe::sample {
 
-class Cube : public SampleObject {
+class RotatingCube : public SampleObject {
 
 public:
     using SampleObject::SampleObject;
@@ -14,6 +14,8 @@ public:
      * @brief Builds internal cube renderer and mesh.
      */
     void OnInit() override;
+
+    void OnUpdate() override;
 
     void OnTest() override;
 };

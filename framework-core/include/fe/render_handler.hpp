@@ -4,16 +4,14 @@
 #include <queue>
 #include <unordered_map>
 
+#include <glad/gl.h>
+
 namespace fe {
 
 class Object;
 
 
 namespace internal {
-
-// !! tech debt imminent !! 
-
-using GLint = int; // TODO: (CRITICAL) Replace with unified GL header include 
 
 struct gl_render_handle_ {
     GLint shader_program_id;
@@ -30,7 +28,22 @@ struct gl_render_handle_ {
 
 namespace runtime {
 
+class RenderHandler;
 
+struct ConfigState {
+    GLbitfield clear_mask = 0x00;
+};
+
+struct RenderConfig {
+    bool depth = true;
+    bool anti_aliasing = false;
+    struct clear_color_t { float r; float g; float b; float a; } clear_color = { 0.0f, 0.5f, 0.5f, 1.0f };
+
+private:
+    ConfigState config_state;
+
+    friend RenderHandler;
+};
 
 class RenderHandler {
 private:
@@ -41,6 +54,8 @@ public:
     std::unordered_map<Object*, fe::internal::gl_render_handle_> skipped_objects_; // Objects set to skip drawing next frame 
     // TODO: Mat/mesh Batches
 public:
+    RenderConfig config;
+
     /**
      * @brief Uploads an object's render data -- provided it contains a componenent derived from `Renderer`.
      * TODO: Word this better :sob: 
@@ -54,8 +69,15 @@ public:
 
     /**
      * @brief Draw all objects loaded in this render handler. Should never be called by game code. 
+     * TODO: Figure out how to privatize. 
      */
     void DrawObjects();
+
+    /**
+     * @brief Updates the OpenGL context with the current configurations. 
+     */
+    void ConfigureGLParameters();
+
 };
 
 }

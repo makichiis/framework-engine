@@ -8,6 +8,8 @@ static const char* basic_color_shader_src_vertex_ = "#version 330 core\n"
     "layout (location = 1) in vec2 aTex;\n"
     "layout (location = 2) in vec3 aNormal;\n"
     ""
+    "out vec3 Normal;"
+    ""
     "uniform mat4 projection;\n"
     "uniform mat4 view;\n"
     "uniform mat4 model;\n"
@@ -15,14 +17,17 @@ static const char* basic_color_shader_src_vertex_ = "#version 330 core\n"
     "void main()\n"
     "{\n"
     "    gl_Position = projection * view * model * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "    Normal = aNormal;\n"
     "}\0";
 
 static const char* basic_color_shader_src_frag_ = "#version 330 core\n"
     "out vec4 FragColor;\n"
     "uniform vec4 color;\n"
+    "in vec3 Normal;"
     "void main()\n"
     "{\n"
-    "    FragColor = vec4(1.0, 0.5, 0.2, 1.0);\n"
+    "    vec3 normal = normalize(Normal);\n"
+    "    FragColor = (color - 0.05 - (0.075 * (1 - normal.y)) + (0.05 * (1 - abs(normal.z))) - (0.05 * -normal.y));\n"
     "}\0";
 
 // TODO: (CRITICAL) This is an awful model. Refactor into global shader type factory. 

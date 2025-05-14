@@ -37,6 +37,7 @@ int main() {
     }
 
     std::cout << "GLFW and GL bindings loaded. Initializing Framework runtime...\n";
+    
 
     auto& runtime_handler = fe::runtime::FrameworkRuntimeHandler::GetRuntimeHandler();
 
@@ -45,30 +46,29 @@ int main() {
 
     auto camera = main_scene->AddChild<fe::Camera>("Main Camera");
     
-    camera->position = { 0.0f, 0.0f, -1.0f };
+    camera->position = { 0.0f, 0.0f, -5.0f };
     camera->projection = glm::perspective(glm::radians(60.0f), 640.0f / 480.0f, 0.1f, 100.0f);
     camera->view = glm::translate(glm::identity<glm::mat4>(), camera->position);
 
-    auto cube = main_scene->AddChild<fe::sample::Cube>("Funny Cube");
+    auto cube = main_scene->AddChild<fe::sample::RotatingCube>("Funny Cube");
     std::cout << cube->name << " has " << cube->components_by_type.size() << " components.\n";
 
     // (temp) manual scene camera update 
     main_scene->SetPrimaryCamera(camera);
     main_scene->GetPrimaryCamera<fe::Camera>()->OnCameraUpdate();
 
-    std::cout << "Scene loaded!\n"; 
-
     // (temp) manual object upload 
+    // TODO: abstract into scene manager
     std::cout << "Uploading GL buffers for " << cube->name << " at " << cube << '\n';
     runtime_handler.GetRenderHandler()->UploadObject(cube);
 
-    glm::mat4 model = glm::identity<glm::mat4>();
-    cube->GetComponent<fe::DefaultRenderer>()->material->shader->SetMatrix4s("model", 1, GL_FALSE, glm::value_ptr(model));
+    std::cout << "Scene loaded!\n"; 
+
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        glClearColor(0.0, 0.5, 0.5, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
+
+        runtime_handler.UpdateTime(glfwGetTime);
 
         for (auto object : runtime_handler.GetResourceManager()->GetSceneGraph().all_objects) {
             object->OnUpdate();

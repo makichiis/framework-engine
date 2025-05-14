@@ -12,8 +12,13 @@
 #include <cstddef>
 
 #include "fe/resource_manager.hpp"
+// #include "fe/runtime_handler.hpp"
 
 namespace fe {
+
+namespace runtime {
+    class FrameworkRuntimeHandler;
+}
 
 class Component;
 class Renderer;
@@ -146,6 +151,13 @@ public:
     bool HasComponent() {
         return components_by_type.find(typeid(T)) != components_by_type.end();
     }
+
+    /**
+     * @brief Retrieves this objects runtime handler. Provides simple interface to
+     * Framework components. Effective wrapper function for singleton constructor of
+     * `FrameworkRuntimeHandler`.
+     */
+    runtime::FrameworkRuntimeHandler& GetFramework();
 
 private:
     /**

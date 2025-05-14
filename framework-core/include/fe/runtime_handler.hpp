@@ -27,6 +27,8 @@ private:
     SceneManager scene_manager;
 
 public:
+    double delta_time = 0.0;
+
     /**
      * @brief Retrieves the global runtime handler. 
      */
@@ -35,6 +37,11 @@ public:
     ResourceManager *const GetResourceManager();
     RenderHandler *const GetRenderHandler();
     SceneManager *const GetSceneManager();
+
+    /**
+     * @brief Updates this runtime handler's delta time and other possibly time-related calculations. Called by driver.
+     */
+    void UpdateTime(double (*time_fn)());
 
 private:
     FrameworkRuntimeHandler();

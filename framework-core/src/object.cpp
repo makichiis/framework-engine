@@ -1,4 +1,5 @@
 #include <fe/objects/object.hpp>
+#include <fe/runtime_handler.hpp>
 
 #include <iostream>
 
@@ -26,4 +27,8 @@ bool fe::Object::remove_child_(Object* obj) {
 
     children.erase(obj_it);
     return true;
+}
+
+fe::runtime::FrameworkRuntimeHandler& fe::Object::GetFramework() {
+    return runtime::FrameworkRuntimeHandler::GetRuntimeHandler();
 }

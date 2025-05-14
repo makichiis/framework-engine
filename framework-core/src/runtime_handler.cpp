@@ -18,3 +18,12 @@ fe::runtime::RenderHandler *const fe::runtime::FrameworkRuntimeHandler::GetRende
 fe::SceneManager *const fe::runtime::FrameworkRuntimeHandler::GetSceneManager() {
     return &scene_manager;
 }
+
+void fe::runtime::FrameworkRuntimeHandler::UpdateTime(double (*time_fn)()) {
+    static double old_time_since_start_ = 0.0;
+
+    double time_since_start = time_fn();
+    delta_time = time_since_start - old_time_since_start_;
+    
+    old_time_since_start_ = time_since_start;
+} 

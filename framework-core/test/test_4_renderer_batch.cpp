@@ -44,10 +44,10 @@ int main() {
     auto main_scene = scene_manager->CreateScene<Scene>("Main Scene");
     scene_manager->SetCurrentScene(main_scene);
 
-    auto first_cube = main_scene->AddChild<Cube>("First Cube");
+    auto first_cube = main_scene->AddChild<RotatingCube>("First Cube");
     (void)first_cube;
 
-    auto second_cube = main_scene->AddChild<Cube>("Second Cube");
+    auto second_cube = main_scene->AddChild<RotatingCube>("Second Cube");
     (void)second_cube;
 
     auto renderless_object = main_scene->AddChild<Object>("Renderless Object");

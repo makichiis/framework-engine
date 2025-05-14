@@ -16,6 +16,8 @@ public:
     glm::mat4 view;
     glm::vec3 position;
 
+    
+
     virtual void OnCameraUpdate();
 };
 
