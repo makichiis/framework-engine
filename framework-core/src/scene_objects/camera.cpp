@@ -6,24 +6,19 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-void fe::Camera::OnCameraUpdate() {
-    auto& runtime = runtime::FrameworkRuntimeHandler::GetRuntimeHandler();
-    auto resource_manager = runtime.GetResourceManager();
+void fe::Camera::OnCameraStateChange() {
+    auto resource_manager = GetFramework().GetResourceManager();
 
     for (auto&& shader : resource_manager->GetSceneGraph().shaders) {
-        assert(shader->GetShaderID() != 0);
+        assert(shader->GetShaderID() != 0); // TODO: Refactgor this when empty shaders are valid.
         glUseProgram(shader->GetShaderID());
 
         if (shader->HasUniform("projection")) {
-            std::cout << "Shader " << shader->GetShaderID() << " has projection uniform.\n";
             shader->SetMatrix4s("projection", 1, GL_FALSE, glm::value_ptr(projection));
         }
 
         if (shader->HasUniform("view")) {
-            std::cout << "Shader " << shader->GetShaderID() << " has view uniform.\n";
             shader->SetMatrix4s("view", 1, GL_FALSE, glm::value_ptr(view));
         }
-
-        
     }
 }

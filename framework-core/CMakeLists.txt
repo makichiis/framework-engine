@@ -31,10 +31,8 @@ endif(DEBUG)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Add common include directories
-include_directories(${CMAKE_SOURCE_DIR}/include/)
-include_directories(${CMAKE_SOURCE_DIR}/lib/glfw/include/)
-include_directories(${CMAKE_SOURCE_DIR}/lib/glad/include/)
-include_directories(${CMAKE_SOURCE_DIR}/lib/glm/include/)
+
+
 
 # Add the external libraries as subdirectories (assuming CMakeLists.txt exists in these)
 add_subdirectory(lib/glfw)
@@ -52,6 +50,8 @@ add_library(${PROJECT_NAME} STATIC
   src/assets/asset.cpp 
   src/assets/basic_color_shader.cpp 
   src/assets/shader.cpp
+
+  src/interface/window.cpp
 
   src/materials/default_material.cpp
 
@@ -73,8 +73,14 @@ add_library(${PROJECT_NAME} STATIC
 
 )
 
+target_include_directories(framework PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+target_include_directories(framework PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib/glfw/include/)
+target_include_directories(framework PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib/glad/include/)
+target_include_directories(framework PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib/glm/include/)
+
 # Link necessary libraries to the shared library
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw glad)
+
 
 # -- Tests --
 

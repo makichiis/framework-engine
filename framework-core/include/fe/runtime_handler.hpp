@@ -4,6 +4,7 @@
 #include <fe/resource_manager.hpp>
 #include <fe/render_handler.hpp>
 #include <fe/scene_manager.hpp>
+#include <fe/window.hpp>
 
 namespace fe {
 /**
@@ -22,9 +23,10 @@ namespace internal {
  */
 class FrameworkRuntimeHandler {
 private:
-    ResourceManager resource_manager;
-    RenderHandler render_handler;
-    SceneManager scene_manager;
+    ResourceManager resource_manager_;
+    RenderHandler render_handler_;
+    SceneManager scene_manager_;
+    Window window_;
 
 public:
     double delta_time = 0.0;
@@ -37,6 +39,16 @@ public:
     ResourceManager *const GetResourceManager();
     RenderHandler *const GetRenderHandler();
     SceneManager *const GetSceneManager();
+
+    /**
+     * @brief Retrieve the current window.
+     */
+    Window *const GetWindow();
+    
+    /**
+     * @brief Auxiliary access function for `GetWindow()->GetInput()`
+     */
+    InputHandler *const GetInput();
 
     /**
      * @brief Updates this runtime handler's delta time and other possibly time-related calculations. Called by driver.

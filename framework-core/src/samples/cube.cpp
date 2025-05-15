@@ -8,51 +8,6 @@
 #include <fe/objects/components/transform.hpp>
 #include <fe/runtime_handler.hpp>
 
-
-// static fe::Vertex vertices[] = {
-//     {-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-
-//     {-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-
-//     {-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-
-//     { 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-
-//     {-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-
-//     {-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     { 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 0.0f, 0.0f,},
-//     {-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,},
-// };
-
 static fe::Vertex vertices[] = {
     // Front face (z = -0.5) - normal: (0, 0, -1)
     {-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  0.0f, 0.0f, -1.0f},
@@ -103,13 +58,6 @@ static fe::Vertex vertices[] = {
     {-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f, 1.0f, 0.0f},
 };
 
-
-// static fe::Vertex vertices[] = {
-//     {-0.5f, -0.5f, 0.0f},
-//     { 0.5f, -0.5f, 0.0f},
-//     { 0.0f,  0.5f, 0.0f}
-// };
-
 void fe::sample::RotatingCube::OnInit() {
     CreateComponent<DefaultRenderer>("Default Renderer");
     static_assert(std::is_base_of_v<Renderer, DefaultRenderer>);
@@ -123,12 +71,12 @@ void fe::sample::RotatingCube::OnInit() {
     trans->rotation.axis = { 0.0f, 1.0f, 1.0f };
 }
 
-#include <iostream>
-
 void fe::sample::RotatingCube::OnUpdate() {
     auto& rot = GetComponent<Transform>()->rotation;
     rot.angle_degrees += 30.0f * (float)(GetFramework().delta_time);
 }
+
+#include <iostream>
 
 void fe::sample::RotatingCube::OnTest() {
     std::cout << "Cube::OnTest()\n";

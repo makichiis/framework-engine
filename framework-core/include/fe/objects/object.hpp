@@ -147,6 +147,9 @@ public:
             resource_manager->DestroyObject(component);
     }
 
+    /**
+     * @return `true` if this object has a component of type `T`.
+     */
     template <class T>
     bool HasComponent() {
         return components_by_type.find(typeid(T)) != components_by_type.end();

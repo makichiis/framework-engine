@@ -55,7 +55,7 @@ int main() {
 
     // (temp) manual scene camera update 
     main_scene->SetPrimaryCamera(camera);
-    main_scene->GetPrimaryCamera<fe::Camera>()->OnCameraUpdate();
+    main_scene->GetPrimaryCamera<fe::Camera>()->OnCameraStateChange();
 
     // (temp) manual object upload 
     // TODO: abstract into scene manager
@@ -82,11 +82,4 @@ int main() {
     }
 
     glfwTerminate();
-
-    
-    
-    (void)camera;
-    (void)cube;
-
-    
 }

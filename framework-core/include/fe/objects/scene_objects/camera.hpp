@@ -14,11 +14,12 @@ public:
 
     glm::mat4 projection;
     glm::mat4 view;
-    glm::vec3 position;
+    glm::vec3 position; // TODO: replace with transform component
 
-    
-
-    virtual void OnCameraUpdate();
+    /**
+     * @brief Called by the Scene Manager when 
+     */
+    virtual void OnCameraStateChange();
 };
 
 }
