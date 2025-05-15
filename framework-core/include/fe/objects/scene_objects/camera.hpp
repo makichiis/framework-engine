@@ -17,9 +17,11 @@ public:
     glm::vec3 position; // TODO: replace with transform component
 
     /**
-     * @brief Called by the Scene Manager when 
+     * @brief Called by the driver before `OnUpdate()` is called on any object. 
+     * May safely be called directly to bolster pre-processing events like 
+     * custom frustum culling. 
      */
-    virtual void OnCameraStateChange();
+    virtual void OnCameraUpdate();
 };
 
 }

@@ -1,7 +1,5 @@
 #include <iostream>
 
-#define DEBUG
-
 #include <fe/runtime_handler.hpp>
 #include <fe/objects/scene_objects/camera.hpp>
 #include <fe/objects/scene_objects/sample_objects/cube.hpp>
@@ -55,7 +53,6 @@ int main() {
 
     // (temp) manual scene camera update 
     main_scene->SetPrimaryCamera(camera);
-    main_scene->GetPrimaryCamera<fe::Camera>()->OnCameraStateChange();
 
     // (temp) manual object upload 
     // TODO: abstract into scene manager
@@ -69,6 +66,7 @@ int main() {
         glfwPollEvents();
 
         runtime_handler.UpdateTime(glfwGetTime);
+        main_scene->GetPrimaryCamera()->OnCameraUpdate();
 
         for (auto object : runtime_handler.GetResourceManager()->GetSceneGraph().all_objects) {
             object->OnUpdate();

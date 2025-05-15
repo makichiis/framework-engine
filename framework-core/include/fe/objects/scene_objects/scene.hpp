@@ -19,10 +19,15 @@ public:
         primary_camera = camera;
     }
 
-    template <class T>
-    T* GetPrimaryCamera() requires std::is_base_of_v<Camera, T> {
-        return dynamic_cast<T*>(primary_camera);
-    }
+    /**
+     * @brief Retrieve the camera currently rendering this scene. 
+     */
+    fe::Camera* GetPrimaryCamera();
+
+    // template <class T>
+    // T* GetPrimaryCamera() requires std::is_base_of_v<Camera, T> {
+    //     return dynamic_cast<T*>(primary_camera);
+    // }
 };
 
 }

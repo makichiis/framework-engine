@@ -63,6 +63,7 @@ add_library(${PROJECT_NAME} STATIC
   src/samples/cube.cpp
 
   src/scene_objects/camera.cpp
+  src/scene_objects/scene.cpp
 
   src/object.cpp
   src/render_handler.cpp

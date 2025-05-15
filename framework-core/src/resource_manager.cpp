@@ -58,3 +58,9 @@ fe::ResourceManager::~ResourceManager() {
 fe::SceneGraphView fe::ResourceManager::GetSceneGraph() const {
     return SceneGraphView{ scene_graph_ };
 }
+
+void fe::ResourceManager::PollUpdateEvents() {
+    for (auto object : GetSceneGraph().all_objects) {
+        object->OnUpdate();
+    }
+}

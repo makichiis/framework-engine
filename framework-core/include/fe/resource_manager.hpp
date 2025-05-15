@@ -222,6 +222,8 @@ public:
 
     SceneGraphView GetSceneGraph() const;
 
+    void PollUpdateEvents();
+
 private:
 };
 

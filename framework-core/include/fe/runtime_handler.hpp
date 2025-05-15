@@ -26,7 +26,7 @@ private:
     ResourceManager resource_manager_;
     RenderHandler render_handler_;
     SceneManager scene_manager_;
-    Window window_;
+    Window* window_;
 
 public:
     double delta_time = 0.0;
@@ -45,6 +45,8 @@ public:
      */
     Window *const GetWindow();
     
+    void SetWindow(Window* window);
+
     /**
      * @brief Auxiliary access function for `GetWindow()->GetInput()`
      */

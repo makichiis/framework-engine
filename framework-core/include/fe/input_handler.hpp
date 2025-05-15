@@ -28,6 +28,17 @@ enum class KeyState {
 struct CursorPosition {
     double x;
     double y;
+
+    /**
+     * @brief Retrieves the cursor delta of this cursor position and `other`. 
+     * Absolute value of differences.
+     */
+    CursorPosition delta(const CursorPosition& other);
+};
+
+struct ScrollDelta {
+    double x;
+    double y;
 };
 
 using key_mask_t = uint64_t;
@@ -61,7 +72,26 @@ private:
     void (*window_bind_fn_)(void* abstract_window_object_) = nullptr; // Function wrapper for window binding.
 
     friend Window;
+    Window* window_;
+
+    CursorPosition last_position_ = {};
+    CursorPosition delta_ = {};
+    ScrollDelta scroll_delta_ = {};
 public:
+    /**
+     * @brief Retrieves the last position of the input handler. 
+     */
+    CursorPosition GetLastCursorPosition() const;
+
+    /**
+     * @brief Retrieve the distance moved by the cursor since the last update.
+     */
+    CursorPosition GetCursorDelta() const;
+
+    /**
+     * @brief Retrieve the scroll delta since last update.
+     */
+    ScrollDelta GetScrollDelta() const;
 
     /**
      * @brief Retrieves whether the current key is being pressed. 
@@ -72,6 +102,7 @@ public:
      * @brief Retrieve the 2D position of the cursor. 
      */
     CursorPosition GetCursorPosition();
+
 
     /**
      * @brief Set cursor visibility to `cursor_hidden`. 

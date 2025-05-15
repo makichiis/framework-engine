@@ -24,4 +24,10 @@ fe::Scene* fe::SceneManager::GetCurrentScene() {
     return current_scene_;
 }
 
+void fe::SceneManager::PollCameraEvents() {
+    // TODO: Abstract, should work with all camera subtypes.
+    current_scene_->GetPrimaryCamera()->OnCameraUpdate();
+}
+
 bool fe::SceneManager::scene_is_in_scene_list_(Scene* scene) { return scenes_.find(scene) != scenes_.end(); }
+

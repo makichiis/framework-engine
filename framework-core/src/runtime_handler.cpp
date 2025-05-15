@@ -20,11 +20,17 @@ fe::SceneManager *const fe::runtime::FrameworkRuntimeHandler::GetSceneManager() 
 }
 
 fe::Window *const fe::runtime::FrameworkRuntimeHandler::GetWindow() {
-    return &window_;
+    return window_;
+}
+
+void fe::runtime::FrameworkRuntimeHandler::SetWindow(Window* window) {
+    assert(window);
+
+    window_ = window;
 }
 
 fe::InputHandler *const fe::runtime::FrameworkRuntimeHandler::GetInput() {
-    return &(window_.input_handler);
+    return &(window_->input_handler);
 }
 
 void fe::runtime::FrameworkRuntimeHandler::UpdateTime(double (*time_fn)()) {

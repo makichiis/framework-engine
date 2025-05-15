@@ -63,6 +63,8 @@ public:
      * objects managed by the internal resource manager. 
      */
     void SetCurrentScene(Scene* scene);
+
+    void PollCameraEvents();
 private:
     bool scene_is_in_scene_list_(Scene* scene);
 };
