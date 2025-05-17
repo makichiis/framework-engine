@@ -5,5 +5,5 @@ void fe::DefaultMaterial::OnInit() {
     shader = resource_manager->CreateObject<BasicColorShader>();
     color = { 1.0f, 0.5f, 0.2f, 1.0f };
 
-    shader->SetVec4("color", { color.r, color.g, color.b, color.a });
+    // shader->SetVec4("color", { color.r, color.g, color.b, color.a });
 }

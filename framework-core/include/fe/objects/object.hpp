@@ -46,6 +46,8 @@ public:
      */
     virtual void OnUpdate();
 
+    virtual void OnPreDraw();
+
     virtual void OnTest();
 
     // TODO: Allow transfer of ownership between objects/between RM and object 

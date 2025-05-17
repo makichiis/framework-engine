@@ -14,14 +14,17 @@ class Object;
 namespace internal {
 
 struct gl_render_handle_ {
-    GLint shader_program_id;
-    GLint textures[32]; // TODO: (CRITICAL) Determine from comptime header rather than hardcoding 
+    GLuint shader_program_id;
+    GLuint textures[32]; // TODO: (CRITICAL) Determine from comptime header rather than hardcoding 
 
-    GLint vao;
-    GLint vbo; // NOTE: Multiple-vbo count may change in the future.
-    GLint ebo; // NOTE: Multiple-ebo count may change in the future;
+    GLuint vao;
+    GLuint vbo; // NOTE: Multiple-vbo count may change in the future.
+    GLuint ebo; // NOTE: Multiple-ebo count may change in the future;
 
-    GLint draw_count;
+    GLuint draw_count;
+    GLuint texture_count;
+
+    void DestroyAttachedBuffers();
 };
 
 }
@@ -55,6 +58,8 @@ public:
     // TODO: Mat/mesh Batches
 public:
     RenderConfig config;
+
+    ~RenderHandler();
 
     /**
      * @brief Uploads an object's render data -- provided it contains a componenent derived from `Renderer`.

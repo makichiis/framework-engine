@@ -10,8 +10,9 @@
 
 void fe::Camera::OnCameraUpdate() {
     auto resource_manager = GetFramework().GetResourceManager();
+    // std::cout << "Silly\n";
 
-    projection = glm::perspective(glm::radians(60.0f), (float)GetFramework().GetWindow()->GetState().size.aspect(), 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(60.0f), (float)GetFramework().GetWindow()->GetState().size.aspect(), near, far);
     view = glm::translate(glm::identity<glm::mat4>(), position);
 
     for (auto&& shader : resource_manager->GetSceneGraph().shaders) {
@@ -26,4 +27,6 @@ void fe::Camera::OnCameraUpdate() {
             shader->SetMatrix4s("view", 1, GL_FALSE, glm::value_ptr(view));
         }
     }
+
+    // std::cout << "done\n";
 }

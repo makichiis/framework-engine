@@ -3,8 +3,6 @@
 #include <cassert>
 #include <chrono>
 
-#define DEBUG
-
 #include <fe/objects/scene_objects/camera.hpp>
 #include <fe/objects/scene_objects/scene.hpp>
 #include <fe/objects/object.hpp>

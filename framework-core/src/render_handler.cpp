@@ -13,6 +13,23 @@
 
 #include <glad/gl.h>
 
+#include <unordered_set>
+
+// TODO: Note: This paradigm changes completely when batching is implemented. Not scalable.
+void fe::internal::gl_render_handle_::DestroyAttachedBuffers() {
+    glDeleteBuffers(1, &ebo);
+    glDeleteBuffers(1, &vbo);
+    glDeleteVertexArrays(1, &vao);
+}
+
+fe::runtime::RenderHandler::~RenderHandler() {
+    for (auto&& [_, handle] : skipped_objects_)
+        handle.DestroyAttachedBuffers();
+
+    for (auto&& [_, handle] : uploaded_render_objects_)
+        handle.DestroyAttachedBuffers();
+}
+
 fe::Renderer* get_renderer(fe::Object* obj) {
     for (auto&& [_, component] : obj->components_by_type) {
         auto renderer = dynamic_cast<fe::Renderer*>(component);
@@ -41,7 +58,6 @@ void fe::runtime::RenderHandler::UploadObject(fe::Object* obj) {
         // TODO: Upload mesh. Mesh information provided by Mesh component.
 
         GLsizei vertex_sz = static_cast<GLsizei>(mesh->vertices.size() * sizeof(Vertex));
-        std::cout << "Mesh byte size: " << vertex_sz << '\n';
         // TODO: Move VAO/VBO to helper fns
 
         GLuint vao, vbo;
@@ -108,7 +124,10 @@ void fe::runtime::RenderHandler::DrawObjects() {
                 model = glm::translate(model, trans->position);
                 model = glm::rotate(model, glm::radians(trans->rotation.angle_degrees), trans->rotation.axis);
 
-                obj->GetComponent<fe::DefaultRenderer>()->material->shader->SetMatrix4s("model", 1, GL_FALSE, glm::value_ptr(model));
+                auto renderer = obj->GetComponent<fe::DefaultRenderer>();
+                renderer->material->shader->SetMatrix4s("model", 1, GL_FALSE, glm::value_ptr(model));
+                renderer->material->shader->SetVec4("color", { renderer->material->color.r, renderer->material->color.g, renderer->material->color.b, renderer->material->color.a });
+                
             }
         }
 

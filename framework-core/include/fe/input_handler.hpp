@@ -16,9 +16,9 @@ enum class Key : uint16_t {
     A, B, C, D, E, F, G, H, I, J, K, L, M, 
     N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
 
-    LEFT_SHIFT, RIGHT_SHIFT, LEFT_CTRL, RIGHT_CTRL,
+    LEFT_SHIFT, RIGHT_SHIFT, LEFT_CTRL, RIGHT_CTRL, ALT, 
     MINUS, PLUS, ENTER, SPACE,
-    LEFT, RIGHT, UP, DOWN
+    LEFT, RIGHT, UP, DOWN,
 };
 
 enum class KeyState {
@@ -59,17 +59,12 @@ namespace runtime {
 
 class Window;
 
-struct input_reflector_;
-
 class InputHandler {
 private:
     int key_mappings_[BITSIZEOF(key_mask_t)] = {}; // Mapping of keys in `fe::Key` to platform-specific keys
-    std::unordered_map<int, fe::Key> reverse_key_mappings_;
+    std::unordered_map<int, fe::Key> reverse_key_mappings_; // Mapping of platform-specific keys to Framework keys
 
     std::unordered_map<fe::Key, std::vector<void (*)(int key, int scancode, int action, int mods)>> key_event_subscribers_;
-
-    void* window_handle_ = nullptr;
-    void (*window_bind_fn_)(void* abstract_window_object_) = nullptr; // Function wrapper for window binding.
 
     friend Window;
     Window* window_;
@@ -118,6 +113,7 @@ public:
     /**
      * @brief Subscribe `event_handler` to `key`. 
      * @note TODO: Refactor using class-bindable function wrapper (`std::function<T>`)
+     * @deprecated Just use `fe::Object::OnUpdate`. Once the event system is reworked, this function will have no performance benefits.
      */    
     void RegisterKeyEvent(Key key, void (*event_handler)(int key, int scancode, int action, int mods));
 };

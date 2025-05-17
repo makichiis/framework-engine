@@ -12,10 +12,10 @@ private:
     void handle_visibility_change_(bool visible);
 
 public:
-    using VisibilityFlag = Flag<decltype(&handle_visibility_change_)>;
+    using VisibilityFlag = Flag<decltype(&Renderer::handle_visibility_change_)>;
     
     Material* material; // Underlying render blueprint for this renderer.
-    VisibilityFlag visible { &handle_visibility_change_ }; // Whether to render this object.
+    VisibilityFlag visible { &Renderer::handle_visibility_change_ }; // Whether to render this object.
 
     using Component::Component;
 };

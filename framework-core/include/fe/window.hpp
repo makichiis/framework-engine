@@ -26,15 +26,14 @@ struct WindowState {
     Size2D size;
 };
 
-class Window {
+class Window { // TODO: refactor as base object
+#ifdef DEBUG
+public:
+#endif 
     WindowState state_;
-
     void* window_handle_ = nullptr;
-    void (*window_bind_fn_)(void* abstract_window_object_) = nullptr; // Function wrapper for window binding. // deprecated, is only called internally...
-    void (*window_delete_fn_)() = nullptr; // deprecated, is only called internally...
-    void (*window_event_poll_fn_)() = nullptr; // deprecated, is only called internally...
-    void (*window_swap_buffers_fn_)(void* abstract_window_object) = nullptr; // deprecated, is only called internally...
 
+    friend InputHandler;
     InputHandler input_handler;
 
     friend runtime::FrameworkRuntimeHandler;

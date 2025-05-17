@@ -23,13 +23,19 @@ namespace internal {
  */
 class FrameworkRuntimeHandler {
 private:
-    ResourceManager resource_manager_;
-    RenderHandler render_handler_;
-    SceneManager scene_manager_;
+#ifdef DEBUG
+public:
+#endif 
+    ResourceManager* resource_manager_;
+    RenderHandler* render_handler_;
+    SceneManager* scene_manager_;
     Window* window_;
 
+    double time_since_start_ = 0.0;
 public:
     double delta_time = 0.0;
+
+    ~FrameworkRuntimeHandler();
 
     /**
      * @brief Retrieves the global runtime handler. 
@@ -48,7 +54,9 @@ public:
     void SetWindow(Window* window);
 
     /**
-     * @brief Auxiliary access function for `GetWindow()->GetInput()`
+     * @brief Retrieve the input handler for reading key and mouse input.
+     * @returns The input handler. 
+     * @note Auxiliary access function for `GetWindow()->GetInput()`
      */
     InputHandler *const GetInput();
 
@@ -56,6 +64,11 @@ public:
      * @brief Updates this runtime handler's delta time and other possibly time-related calculations. Called by driver.
      */
     void UpdateTime(double (*time_fn)());
+
+    /**
+     * @brief Retrieve the time (in seconds) since the start of this simulation.s
+     */
+    double GetTime();
 
 private:
     FrameworkRuntimeHandler();

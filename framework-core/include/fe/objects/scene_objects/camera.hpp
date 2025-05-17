@@ -16,6 +16,9 @@ public:
     glm::mat4 view;
     glm::vec3 position; // TODO: replace with transform component
 
+    float near = 0.1f;
+    float far = 1000.0f;
+
     /**
      * @brief Called by the driver before `OnUpdate()` is called on any object. 
      * May safely be called directly to bolster pre-processing events like 

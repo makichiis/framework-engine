@@ -3,6 +3,8 @@
 #include <fe/objects/assets/shaders/basic_color_shader.hpp>
 #include <fe/runtime_handler.hpp>
 
+#include <glm/gtc/type_ptr.hpp>
+
 static const char* basic_color_shader_src_vertex_ = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "layout (location = 1) in vec2 aTex;\n"
@@ -35,6 +37,8 @@ static const char* basic_color_shader_src_frag_ = "#version 330 core\n"
 void fe::BasicColorShader::OnInit() {
     static GLuint program_id = build_program_();
     program_id_ = program_id;
+
+    // color = { (float)(rand() % 255) / 255.0f, (float)(rand() % 255) / 255.0f, (float)(rand() % 255) / 255.0f, 1.0f };
 }
 
 GLuint fe::BasicColorShader::build_program_() {

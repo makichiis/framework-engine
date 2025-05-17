@@ -45,6 +45,8 @@ fe::InputHandler *const fe::Window::GetInput() {
 }
 
 fe::Window* fe::Window::CreateNewWindow(Size2D size, std::string title) {
+
+    // TODO: Abstract GLFW init to singleton constructor, since it is global
     if (!glfwInit()) {
         std::cerr << "[ERROR]: Failed to initialize GLFW.\n";
         std::abort();
@@ -67,58 +69,45 @@ fe::Window* fe::Window::CreateNewWindow(Size2D size, std::string title) {
     }
 
     Window* result = new Window;
+    result->input_handler.window_ = result;
     result->state_.size = size;
-    
+    result->window_handle_ = window;
+
     glfwSetWindowUserPointer(window, result);
-    result->InitializeWindowBindings(reinterpret_cast<void (*)(void*)>(glfwMakeContextCurrent), (void*)window);
+
+    for (auto key = GLFW_KEY_0; key <= GLFW_KEY_9; ++key) 
+        result->input_handler.key_mappings_[key - GLFW_KEY_0] = key;
+
+    for (auto key = GLFW_KEY_A; key <= GLFW_KEY_Z; ++key)
+        result->input_handler.key_mappings_[key - GLFW_KEY_A + 10] = key;
+
+    result->input_handler.key_mappings_[static_cast<uint16_t>(Key::LEFT_SHIFT)] = GLFW_KEY_LEFT_SHIFT;
+    result->input_handler.key_mappings_[static_cast<uint16_t>(Key::RIGHT_SHIFT)] = GLFW_KEY_RIGHT_SHIFT;
+
+    result->input_handler.key_mappings_[static_cast<uint16_t>(Key::LEFT_CTRL)] = GLFW_KEY_LEFT_CONTROL;
+    result->input_handler.key_mappings_[static_cast<uint16_t>(Key::RIGHT_CTRL)] = GLFW_KEY_RIGHT_CONTROL;
+
+    // TODO: Rest of key set.
+
+    for (auto i = 0ULL; i < BITSIZEOF(key_mask_t); ++i) 
+        result->input_handler.reverse_key_mappings_.insert_or_assign(result->input_handler.key_mappings_[i], static_cast<Key>(i));
+
+    glfwSetWindowSizeCallback(static_cast<GLFWwindow*>(result->window_handle_), glfw_window_size_callback);
+    glfwSetCursorPosCallback(static_cast<GLFWwindow*>(result->window_handle_), glfw_cursor_callback);
+    glfwSetKeyCallback(static_cast<GLFWwindow*>(result->window_handle_), glfw_key_callback);
+    glfwSetScrollCallback(static_cast<GLFWwindow*>(result->window_handle_), glfw_scroll_callback);
+
+    std::cout << "Window bindings set\n";
 
     return result;
 }
 
 void fe::Window::DestroyWindow() {
-    window_delete_fn_();
-
-    window_handle_ = nullptr;
-    window_bind_fn_ = nullptr;
-    window_delete_fn_ = nullptr;
-    window_event_poll_fn_ = nullptr;
-    window_swap_buffers_fn_ = nullptr;
+    assert(!"not implemented");
 }
 
-void fe::Window::InitializeWindowBindings(void (*window_bind_fn)(void* window_object_param), void* window_handle) {
-    if (window_handle_) return; // prevent user-side double-call
-
-    window_handle_ = static_cast<void*>(window_handle);
-    window_bind_fn_ = reinterpret_cast<void (*)(void*)>(glfwMakeContextCurrent);
-    window_delete_fn_ = glfwTerminate;
-    window_event_poll_fn_ = glfwPollEvents;
-    window_swap_buffers_fn_ = reinterpret_cast<void (*)(void*)>(glfwSwapBuffers);
-
-    // -O3 unrolls these anyway
-
-    for (auto key = GLFW_KEY_0; key <= GLFW_KEY_9; ++key) 
-        input_handler.key_mappings_[key - GLFW_KEY_0] = key;
-
-    for (auto key = GLFW_KEY_A; key <= GLFW_KEY_Z; ++key)
-        input_handler.key_mappings_[key - GLFW_KEY_A + 10] = key;
-
-    input_handler.key_mappings_[static_cast<uint16_t>(Key::LEFT_SHIFT)] = GLFW_KEY_LEFT_SHIFT;
-    input_handler.key_mappings_[static_cast<uint16_t>(Key::RIGHT_SHIFT)] = GLFW_KEY_RIGHT_SHIFT;
-
-    input_handler.key_mappings_[static_cast<uint16_t>(Key::LEFT_CTRL)] = GLFW_KEY_LEFT_CONTROL;
-    input_handler.key_mappings_[static_cast<uint16_t>(Key::RIGHT_CTRL)] = GLFW_KEY_RIGHT_CONTROL;
-
-    // TODO: Rest of key set.
-
-    for (auto i = 0ULL; i < BITSIZEOF(key_mask_t); ++i) 
-        input_handler.reverse_key_mappings_.insert_or_assign(input_handler.key_mappings_[i], static_cast<Key>(i));
-
-    glfwSetWindowSizeCallback(static_cast<GLFWwindow*>(window_handle_), glfw_window_size_callback);
-    glfwSetCursorPosCallback(static_cast<GLFWwindow*>(window_handle_), glfw_cursor_callback);
-    glfwSetKeyCallback(static_cast<GLFWwindow*>(window_handle_), glfw_key_callback);
-    glfwSetScrollCallback(static_cast<GLFWwindow*>(window_handle_), glfw_scroll_callback);
-}
-
+// deprecated
+void fe::Window::InitializeWindowBindings(void (*window_bind_fn)(void* window_object_param), void* window_handle) {}
 void fe::Window::PollEvents() {
     glfwPollEvents();
 }
@@ -144,7 +133,6 @@ void fe::Window::OnKeyInput(int key, int scancode, int action, int mods) {
 }
 
 void fe::Window::OnResize(int width, int height) {
-    std::cout << "OnResize()\n";
     state_.size = { width, height };
     glViewport(0, 0, state_.size.x, state_.size.y); // TODO: THIS IS A PIPELINE PART! Refactor into render handler
 }
@@ -163,9 +151,8 @@ fe::key_mask_t fe::get_key_mask(Key key) {
 }
 
 bool fe::InputHandler::GetKeyPressed(Key key) {
-    window_bind_fn_(reinterpret_cast<GLFWwindow*>(window_handle_));
-
-    return glfwGetKey(static_cast<GLFWwindow*>(window_handle_), key_mappings_[static_cast<uint16_t>(key)]);
+    assert(window_->window_handle_); 
+    return glfwGetKey(static_cast<GLFWwindow*>(window_->window_handle_), key_mappings_[static_cast<uint16_t>(key)]) == GLFW_PRESS;
 }
 
 void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -178,8 +165,6 @@ void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, in
 void glfw_window_size_callback(GLFWwindow* window, int width, int height) {
     fe::Window* window_ = static_cast<fe::Window*>(glfwGetWindowUserPointer(window));
     assert(window_);
-
-    std::cout << "grunk\n";
 
     window_->OnResize(width, height);
 }

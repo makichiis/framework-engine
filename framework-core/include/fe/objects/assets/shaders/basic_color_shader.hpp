@@ -3,6 +3,8 @@
 
 #include "shader.hpp"
 
+#include <glm/vec4.hpp>
+
 namespace fe {
 
 class BasicColorShader : public Shader {
@@ -10,7 +12,6 @@ public:
     using Shader::Shader;
 
     void OnInit() override;
-
 private:
     GLuint build_program_();
 };

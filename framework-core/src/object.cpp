@@ -17,6 +17,10 @@ void fe::Object::OnTest() {
     std::cout << "Object::OnTest()\n";
 }
 
+void fe::Object::OnPreDraw() {
+    
+}
+
 void fe::Object::UnbindFromParent() {
     resource_manager->MarkObjectTentative(this);
 }

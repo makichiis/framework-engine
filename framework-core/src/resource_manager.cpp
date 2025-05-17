@@ -51,7 +51,8 @@ fe::ResourceManager::~ResourceManager() {
     while (!scene_graph_.all_objects.empty()) {
         auto* obj = *scene_graph_.all_objects.begin();
 
-        DestroyObject(obj);
+        scene_graph_.all_objects.erase(obj);
+        alloc_.delete_object(obj);
     }
 }
 
