@@ -1,4 +1,4 @@
-# Framework Engine Syntax Specification (WIP)
+# Framework Engine Design Specification (WIP)
 This document outlines the general syntactical and semantic structure of the Framework Engine. This is here to keep development streamlined with minimal tech debt.
 
 ## Naming
