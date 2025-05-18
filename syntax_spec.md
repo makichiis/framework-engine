@@ -17,7 +17,7 @@ Avoid using abbreviations that would __only__ be intuitive to an esoteric demogr
 > Note: Avoid usage of [Hungarian notation](https://en.wikipedia.org/wiki/Hungarian_notation) 
 
 ### Namespaces
-Namespaces are written as mnemonics in lowercase (e.g. `std` = `standard library`). The top-level Framework Engine namespace is specified as `fe`. Namespaces with sufficiently short meanings may use full words, e.g., all objects declared under `fe/objects/sample_objects/` are defined within the namespace `fe::sample`.
+Namespaces are written as mnemonics in lowercase (e.g. `std` = `standard library`). The top-level Framework Engine namespace is specified as `fe`. Namespaces with sufficiently short names may use full words, e.g., all objects declared under `fe/objects/sample_objects/` are defined within the namespace `fe::sample`.
 
 > Header and header guard macro definitions that belong to the Framework Core should be prefixed with `FE_`, e.g., `framework-core/include/fe/resource_manager.hpp` is guarded with `FE_RESOURCE_MANAGER_HPP`.
 
@@ -190,3 +190,18 @@ public:
 
 }
 ```
+
+## Runtime-Internal Implementations
+Types and singletons which are not meant to be inherited from or mutated in any significant way within a game script -- such as the `FrameworkRuntimeHandler` -- are defined within the `fe::runtime` namespace. Anything within the `fe::runtime` namespace is reponsible for the management of Framework resources during a game sequence, and is not constructed by users. Only driver code should ever invoke new data from the `fe::runtime` namespace. 
+
+## Window Context and Input Handling
+The goal of Framework is to be dependency-agnostic, meaning that abstracting away from data and design specific to any given library is paramount. As a result, the `Window` and `InputHandler` libraries are defined within a single module, and it is the only module which contains direct references to `GLFW`, the window manager in this version of the engine. Mappings to key controls and mouse input are entirely module-internal, and abstractions of these control units are defined in the Framework interface. Absolutely ***ZERO*** internal mappings should be made available to the end user without reflection. 
+
+## The Framework Render Pipeline
+TODO
+
+## Event System
+TODO
+
+## `fe::Object` Subtype Declarations
+TODO when FWO and reflection library are done.

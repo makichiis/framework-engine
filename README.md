@@ -3,6 +3,7 @@ Voxel Game Engine written in C++. Runs on OpenGL. Still in super-alpha, pls be p
 
 # Requirements
 - CMake 3.29+
+- **GCC** or **Clang**, with the Address Sanitizer and UB Sanitizer.
 
 # Run unit tests
 ```sh
