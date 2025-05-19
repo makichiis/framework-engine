@@ -15,4 +15,4 @@ $ ctest
 ```
 
 # Contributing/Reading
-Check the [syntax specification](syntax_spec.md) for an overview of Framework Engine's coding conventions.
+Check the [design specification](design_spec.md) for an overview of Framework Engine's coding conventions.
