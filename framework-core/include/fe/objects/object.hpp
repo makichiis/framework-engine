@@ -23,6 +23,12 @@ namespace runtime {
 class Component;
 class Renderer;
 
+/**
+ * @brief Base object type. Any object whose base class is `Object` is managed by
+ * (or very well should be managed by) the resource manager. An `Object` is created 
+ * through the resource manager via `ResourceManager::CreateObject<T>(...)`,
+ * or via `some_object->AddChild<T>(...)` if creating a child of another object. 
+ */
 class Object {
 public:
     ResourceManager* resource_manager;

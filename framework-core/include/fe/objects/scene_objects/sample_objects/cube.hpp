@@ -5,6 +5,9 @@
 
 namespace fe::sample {
 
+/**
+ * @brief A simple cube which rotates every update. Used for unit testing. 
+ */
 class RotatingCube : public SampleObject {
 
 public:

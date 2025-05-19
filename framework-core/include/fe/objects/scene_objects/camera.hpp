@@ -8,12 +8,16 @@
 
 namespace fe {
 
+/**
+ * @brief Base Camera type. Responsible for the rendering of objects in a scene. 
+ */
 class Camera : public SceneObject {
 public:
     using SceneObject::SceneObject;
 
+    // TODO: Replace with transform 
     glm::mat4 projection;
-    glm::mat4 view;
+    glm::mat4 view; 
     glm::vec3 position; // TODO: replace with transform component
 
     float near = 0.1f;
